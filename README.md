@@ -1,3 +1,4 @@
+__!!!NO USERNAME, PASSWORD HERE!!!__
 #Hadoop Cluster Requirements
 - OS: CentOS 7/ Ubuntu 14.04
 - Network Structure: NAT, Losalamos need to be the NAT server. Losalamos can be connected to the port on wall through "eno2".
