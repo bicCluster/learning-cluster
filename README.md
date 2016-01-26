@@ -62,3 +62,9 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 “Losalamos” should also hold a Ambari Agent to be part of the cluster;
 - Keep in mind that “Losalamos” should be one of the clients;
 - (IMPORTANT) once you fail to set up the entire environment, it will be extremely hard to clean up and re-install (the official method doesn’t work in this case). So we highly recommend that you should keep retrying if you encounter problems when installing or deploying hadoop platform on Ambari.
+
+#How to test:
+- Log in through SSH to "Losalamos" and perform all you tests here since this server should be the only interface;
+- Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
+- If there's any "permission" problem, try "su", or "sudo" in each command;
+- Remember that in Mapreduce2.0, you should use the command "yarn" but not "hadoop".
