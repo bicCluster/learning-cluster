@@ -24,7 +24,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Demo does not work will add another 3 points penalty on the previous grade.
 
 ## Other (10')
-- Iptables is up. (2')
+- Iptables is up on losamalos and has basic protection. (2')
 - Name Node and Data Nodes are separate. (2')
 - Hadoop put test on losalamos (2')
 - Hadoop read test on losalamos (2')
