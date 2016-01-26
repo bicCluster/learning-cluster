@@ -1,10 +1,34 @@
 #Hadoop Cluster Requirements
 - OS: CentOS 7/ Ubuntu 14.04
 - Network Structure: NAT, Losalamos need to be the NAT server. Losalamos can be connected to the port on wall through "eno2".
-- Install Choice: http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf
+- Install Choice: [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 - You need to install 'HDFS','MapReduce2','Yarn', 'Ambari Metics' and you must install the package we are currently learning.
 - You must keep a wiki of the necessary steps you think may be helpful to the next group here. Change of the wiki also is part of the grading. 
 - You have 3 whole days minus 2h for grading from 1:00PM the first day to 11:00 AM the last day.
+
+
+#Grading Criteria (30')
+##Wiki (10')
+- Beyond expectation, more than TA would write (12')
+- Meet expectation (10')
+- Basically meet expectation, missing some points that TA think is necessary for other groups (8')
+- Below expectation (6')
+- Less than 10 lines of wiki added/Modified, or modification makes no sense (2')
+
+## Self designed demo (10')
+- Beyond expectation, test some points that TA would not think of (12')
+- Meet expectation (10')
+- Basically meet expectation (8')
+- Below expectation, there are some essential points are not tested (6')
+- Demo does not work will add another 3 points penalty on the previous grade.
+
+## Other (10')
+- Iptables is up. (2')
+- Name Node and Data Nodes are separate. (2')
+- Hadoop put test on losalamos (2')
+- Hadoop read test on losalamos (2')
+- NAT test, get google home page on other three machines. (2')
+- No Alert in Ambari. (1' each alert)
 
 #Knowledge Background:
 - Ubuntu Command Line, Network Config (hostname, hosts, etc)
