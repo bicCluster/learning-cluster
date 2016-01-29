@@ -24,13 +24,22 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Demo does not work will add another 3 points penalty on the previous grade.
 
 ## Other (10')
-- Iptables is up on losamalos and has basic protection. (2')
+- Iptables is up on losamalos and has basic protection with minimum iptables (2')
 - Primary Name Node and Data Nodes should be on separate machines. (2')
 - Seconary Name Node and Secondary Name Nodes should be on separate machines. (2')
 - Hadoop put test on losalamos (1')
 - Hadoop read test on losalamos (1')
 - NAT test, get google home page on other three machines. (2')
 - No Alert in Ambari. (1' each alert)
+
+### Minimum Iptables
+```
+target     prot opt in     out     source               destination 
+ACCEPT     all  --  any    any     anywhere             anywhere             ctstate RELATED,ESTABLISHED
+ACCEPT     all  --  lo     any     anywhere             anywhere            
+ACCEPT     icmp --  any    any     anywhere             anywhere            
+REJECT     all  --  any    any     anywhere             anywhere             reject-with icmp-host-prohibited
+```
 
 #Knowledge Background:
 - Ubuntu Command Line, Network Config (hostname, hosts, etc)
