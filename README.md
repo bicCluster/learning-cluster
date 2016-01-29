@@ -44,15 +44,55 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Every server has two network adapters, “eth0” and “eth1”, and it can only connects to the Internet by “eth1”. So please double-check the connection ports;
 - Since “Losalamos” uses “eth1” to connect to the Internet, it should use “eth0” for the sub network.
 
-#Installation Overview:
-1. Install Ubuntu (recommend 14.04) on each machine;
-2. Connect servers physically, through the switch and network adapter ports on each machine;
-3. Config network environments to form a subnet among servers;
-4. Set up hostnames and domains (domains are needed when installing Ambari)
-5. Config DNS server and hostname lookup, make sure servers can “ping” each other by both IP address and hostname;
-6. Enable “Losalamos” network forwarding mechanism (both IPv4 and IPv6). After that, other servers should be able to get access to the Internet through this gateway;
-7. Follow the Ambari Installation Instructions and patch extra packages or components demanded;
-8. Check Hadoop Components you want and arrange them reasonably on the servers. You should be aware of that “Losalamos” should be one of the clients since it is the only interface to run Hadoop programs from outside.
+<hr>
+
+
+# Steps to Follow:
+
+Overview: Given four blank server, we need to install system and establish a subnet. Finally install the requested hortonwork components. The network should be built as this image
+
+![image](network.png)
+
+## Install Ubuntu
+
+Install Ubuntu (recommend 14.04) on each machine. The CD of Ubuntu is just on the machines. The disks should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
+
+In the image above, the three innet machines\` hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
+
+## Establsh Subnet
+
+1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
+2. Start from the `losalamos`, set up its static ip to `10.0.0.2`
+3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html)
+4. Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
+5. Switch to innet machines, setup such `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help
+6. You should be able to ping each other now using ip
+7. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname
+8. You should be able to ping each other now using domain or hostname
+
+## Iptables
+
+![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
+
+For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/).
+
+Tip: read the instructions carefully and find out which is incoming network port and which is outgoing.
+
+## Install Hadoop using Ambari
+
+Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
+
+REMEMBER:
+
+* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit` 
+* Check Hadoop Components you need and arrange them reasonably on the servers. Some services may fail so do not install services that you do not need.
+* You should be aware of that “Losalamos” should be one of the clients since it is the only interface to run Hadoop programs from outside.
+
+## Test a MapReduce Program
+
+If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
+
+<hr>
 
 #Pitfalls you should pay attention to:
 - Make sure the physical connection is correct;
