@@ -55,15 +55,15 @@ Overview: Given four blank server, we need to install system and establish a sub
 
 ## Install Ubuntu
 
-Install Ubuntu (recommend 14.04) on each machine. The CD of Ubuntu is just on the machines. The disks should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
+Install Ubuntu (recommend 14.04) on each machine. The CD of Ubuntu is just in one of the machines. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
 
-In the image above, the three innet machines\` hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
+In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
 ## Establsh Subnet
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losalamos`, set up its static ip to `10.0.0.2`
-3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html)
+3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
 4. Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
 5. Switch to innet machines, setup each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help
 6. You should be able to ping each other now using ip
@@ -74,7 +74,7 @@ In the image above, the three innet machines\` hostname are `alpha`, `beta` and 
 
 ![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
 
-For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/).
+For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 Tip: read the instructions carefully and find out which is incoming network port and which is outgoing.
 
@@ -82,11 +82,12 @@ Tip: read the instructions carefully and find out which is incoming network port
 
 Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 
-REMEMBER:
+TIPS:
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit` 
-* Check Hadoop Components you need and arrange them reasonably on the servers. Some services may fail so do not install services that you do not need.
+* The services you need to install are 'HDFS', 'MapReduce2', 'Yarn', 'ZooKeeper' and  'Ambari Metrics'. Some other services may fail so do not install services that you do not need.
 * You should be aware of that “Losalamos” should be one of the clients since it is the only interface to run Hadoop programs from outside.
+* You will need to set up password-less SSH during the process, the manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 
 ## Test a MapReduce Program
 
