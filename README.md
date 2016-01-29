@@ -65,7 +65,7 @@ In the image above, the three innet machines\` hostname are `alpha`, `beta` and 
 2. Start from the `losalamos`, set up its static ip to `10.0.0.2`
 3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html)
 4. Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
-5. Switch to innet machines, setup such `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help
+5. Switch to innet machines, setup each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help
 6. You should be able to ping each other now using ip
 7. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname
 8. You should be able to ping each other now using domain or hostname
