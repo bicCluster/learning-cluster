@@ -25,7 +25,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 
 ## Other (10')
 - Iptables is up on losamalos and has basic protection. (2')
-- Name Node and Data Nodes are separate. (2')
+- Name Node and Data Nodes are on separate machine. (2')
 - Hadoop put test on losalamos (2')
 - Hadoop read test on losalamos (2')
 - NAT test, get google home page on other three machines. (2')
