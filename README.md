@@ -5,7 +5,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Install Choice: [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 - You need to install 'HDFS','MapReduce2','Yarn', 'Ambari Metics' and you must install the package we are currently learning.
 - You must keep a wiki of the necessary steps you think may be helpful to the next group here. Change of the wiki also is part of the grading.
-- You have 3 whole days minus 2h for grading from 1:00PM the first day to 11:00 AM the last day.
+- You have 3 whole days minus 2h for grading from 1:00 PM the first day to 11:00 AM the last day.
 
 
 #Grading Criteria (30')
@@ -67,7 +67,7 @@ Overview: Given four blank server, we need to install system and establish a sub
 
 ## Install Ubuntu
 
-Install Ubuntu (recommend 14.04) on each machine. The CD of Ubuntu is just in one of the machines. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
+Install Ubuntu (recommend 14.04) on each machine. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
 
 In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
