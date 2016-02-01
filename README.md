@@ -109,13 +109,16 @@ TIPS:
 ## Test a MapReduce Program
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
+
 Steps:
+
 1. Create a input directory under the user of `hdfs`
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files  with javac and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
+
 Tip: If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
-<hr>
+
 
 #Pitfalls you should pay attention to:
 - Make sure the physical connection is correct;
