@@ -4,7 +4,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Network Structure: NAT, Losalamos need to be the NAT server. Losalamos can be connected to the port on wall through "eno2".
 - Install Choice: [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 - You need to install 'HDFS','MapReduce2','Yarn', 'Ambari Metics' and you must install the package we are currently learning.
-- You must keep a wiki of the necessary steps you think may be helpful to the next group here. Change of the wiki also is part of the grading. 
+- You must keep a wiki of the necessary steps you think may be helpful to the next group here. Change of the wiki also is part of the grading.
 - You have 3 whole days minus 2h for grading from 1:00PM the first day to 11:00 AM the last day.
 
 
@@ -34,7 +34,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 
 ### Minimum Iptables
 ```
-target     prot opt in     out     source               destination 
+target     prot opt in     out     source               destination
 ACCEPT     all  --  any    any     anywhere             anywhere             ctstate RELATED,ESTABLISHED
 ACCEPT     all  --  lo     any     anywhere             anywhere            
 ACCEPT     icmp --  any    any     anywhere             anywhere            
@@ -69,10 +69,12 @@ Install Ubuntu (recommend 14.04) on each machine. The CD of Ubuntu is just in on
 
 In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
+During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine
+
 ## Establsh Subnet
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
-2. Start from the `losalamos`, set up its static ip to `10.0.0.2`
+2. Start from the `losalamos`, set up its static ip to `10.0.0.2`, you can set the different ip whatever you like, but all the ip of each machine should be in the same
 3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
 4. Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
 5. Switch to innet machines, setup each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help
@@ -94,7 +96,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 
 TIPS:
 
-* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit` 
+* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`
 * The services you need to install are 'HDFS', 'MapReduce2', 'Yarn', 'ZooKeeper' and  'Ambari Metrics'. Some other services may fail so do not install services that you do not need.
 * You should be aware of that “Losalamos” should be one of the clients since it is the only interface to run Hadoop programs from outside.
 * You will need to set up password-less SSH during the process, the manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
