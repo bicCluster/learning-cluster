@@ -16,12 +16,13 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Below expectation (6')
 - Less than 10 lines of wiki added/Modified, or modification makes no sense (2')
 
-## Self designed demo (10')
+## Self designed demo with scripts to run without any intervention (10')
 - Beyond expectation, test some points that TA would not think of (12')
 - Meet expectation (10')
 - Basically meet expectation (8')
 - Below expectation, there are some essential points are not tested (6')
 - Demo does not work will add another 3 points penalty on the previous grade.
+- Demo requires TA intervention will add 1 point penalty on the previous grade.
 
 ## Other (10')
 - Iptables is up on losamalos and has basic protection with minimum iptables (2')
