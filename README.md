@@ -69,18 +69,19 @@ Install Ubuntu (recommend 14.04) on each machine. The CD of Ubuntu is just in on
 
 In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
-During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine
+During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine during the install process.
 
 ## Establsh Subnet
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
-2. Start from the `losalamos`, set up its static ip to `10.0.0.2`, you can set the different ip whatever you like, but all the ip of each machine should be in the same
+2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
+3. Set up its static ip to `10.0.0.2` on 'eth0 .
 3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
 4. Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
-5. Switch to innet machines, setup each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help
-6. You should be able to ping each other now using ip
-7. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname
-8. You should be able to ping each other now using domain or hostname
+5. Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help. Or you can set up the static IP to the three innet machine as the image above, this [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224). And these configuration will take effect after you reboot the machine
+7. You should be able to ping each other now using ip
+8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set
+9. You should be able to ping each other now using domain or hostname
 
 ## Iptables
 
@@ -97,14 +98,20 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 TIPS:
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`
-* The services you need to install are 'HDFS', 'MapReduce2', 'Yarn', 'ZooKeeper' and  'Ambari Metrics'. Some other services may fail so do not install services that you do not need.
-* You should be aware of that “Losalamos” should be one of the clients since it is the only interface to run Hadoop programs from outside.
+* The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  'Ambari Metrics'. Some other services may fail so do not install services that you do not need.
+* You need to install both `ambari-server` and `ambari-agent` on `losamalos`, and you only need to install `ambari-agent` on three innet machine.
+* After you install the `ambari-server` on `losamalos`, the java 1.8 will be installed automatically, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
+* You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
 * You will need to set up password-less SSH during the process, the manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 
 ## Test a MapReduce Program
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
-
+Steps:
+1. Create a input directory under the user of `hdfs`
+2. Write the test MapReduce program (eg. wordcount)
+3. Compile the java files to class files  with javac and archive the class files into `jar`
+4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
 Tip: If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
 <hr>
 
@@ -112,13 +119,13 @@ Tip: If you meet any permission problem of `hdfs`, check [this](http://stackover
 - Make sure the physical connection is correct;
 - You should down/up network adapters or reboot machines to make your network configurations work;
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
-- Ambari Server should be installed on “Losalamos” since it is the only server you can get access to from outside the subnet;
-“Losalamos” should also hold a Ambari Agent to be part of the cluster;
+- Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
+`losalamos` should also hold a Ambari Agent to be part of the cluster;
 - Keep in mind that “Losalamos” should be one of the clients;
 - (IMPORTANT) once you fail to set up the entire environment, it will be extremely hard to clean up and re-install (the official method doesn’t work in this case). So we highly recommend that you should keep retrying if you encounter problems when installing or deploying hadoop platform on Ambari.
 
 #How to test:
-- Log in through SSH to "Losalamos" and perform all you tests here since this server should be the only interface;
+- Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
 - If there's any "permission" problem, try "su", or "sudo" in each command;
 - Remember that in Mapreduce2.0, you should use the command "yarn" but not "hadoop".
