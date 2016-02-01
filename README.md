@@ -27,7 +27,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 ## Other (10')
 - Iptables is up on losamalos and has basic protection with minimum iptables (2')
 - Primary Name Node and Data Nodes should be on separate machines. (2')
-- Seconary Name Node and Secondary Name Nodes should be on separate machines. (2')
+- Primary Name Node and Secondary Name Nodes should be on separate machines. (2')
 - Hadoop put test on losalamos (1')
 - Hadoop read test on losalamos (1')
 - NAT test, get google home page on other three machines. (2')
