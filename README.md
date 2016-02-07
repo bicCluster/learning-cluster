@@ -4,6 +4,11 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 * [Knowledge Background](#knowledge)
 * [Notes About Hardware](#hd)
 * [Steps to Follow](#step)
+    - [Install Ubuntu](#install-ubuntu)
+    - [Establsh Subnet](#install-subnet)
+    - [Iptables](#iptables)
+    - [Install Hadoop using Ambari](#install-hadoop)
+    - [Test a MapReduce Program](#test-mapreduce)
 * [Pitfalls](#pitfall)
 * [How to Re-create the Cluster](#recreate-cluster)
 
@@ -73,19 +78,19 @@ Overview: Given four blank server, we need to install system and establish a sub
 
 ![image](network.png)
 
-## Install Ubuntu
+## <a name="install-ubuntu">Install Ubuntu</a>
 
-    Install Ubuntu (recommend 14.04) on each machine. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
-    It may be hard to create a bootable USB stick on mac OS X. Failures occured for the following two approaches:
-    1. burn by command `dd` [ref](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx)
-    2. burn by UNetbootin [ref](http://unetbootin.github.io/)
-    Please update if there are methods that work. A convenient method is to install Ubuntu from CD.
+Install Ubuntu (recommend 14.04) on each machine. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
 
-    In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
+It may be hard to create a bootable USB stick on mac OS X. Failures occured for the following two approaches:
+1. burn by command `dd` [[ref]](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx)
+2. burn by UNetbootin [[ref]](http://unetbootin.github.io/) Please update if there are methods that work. A convenient method is to install Ubuntu from CD.
 
-    During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine during the install process.
+In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
-## Establsh Subnet
+During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine during the install process.
+
+## <a name="install-subnet">Establsh Subnet</a>
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
@@ -97,7 +102,7 @@ Overview: Given four blank server, we need to install system and establish a sub
 8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set
 9. You should be able to ping each other now using domain or hostname
 
-## Iptables
+## <a name="iptables">Iptables</a>
 
 ![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
 
@@ -106,7 +111,7 @@ For now, the machines in the subnet are unable to connect the real internet. Thi
 Tip: read the instructions carefully and find out which is incoming network port and which is outgoing.
 [Here](https://gist.github.com/xuehung/8859e7162466918aac82) is an example of the iptable configuration
 
-## Install Hadoop using Ambari
+## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
 Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 
@@ -119,7 +124,7 @@ TIPS:
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
 * You will need to set up password-less SSH during the process, the manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 
-## Test a MapReduce Program
+## <a name="test-mapreduce">Test a MapReduce Program</a>
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
 
