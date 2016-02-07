@@ -1,5 +1,13 @@
 __!!!NO USERNAME, PASSWORD HERE!!!__
-#Hadoop Cluster Requirements
+
+* [Hadoop Cluster Requirements](#requirement)
+* [Knowledge Background](#knowledge)
+* [Notes About Hardware](#hd)
+* [Steps to Follow](#step)
+* [Pitfalls](#pitfall)
+* [How to Re-create the Cluster](#recreate-cluster)
+
+# <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
 - Network Structure: NAT, Losalamos need to be the NAT server. Losalamos can be connected to the port on wall through "eno2".
 - Install Choice: [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
@@ -38,19 +46,19 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 ```
 target     prot opt in     out     source               destination
 ACCEPT     all  --  any    any     anywhere             anywhere             ctstate RELATED,ESTABLISHED
-ACCEPT     all  --  lo     any     anywhere             anywhere            
-ACCEPT     icmp --  any    any     anywhere             anywhere            
+ACCEPT     all  --  lo     any     anywhere             anywhere
+ACCEPT     icmp --  any    any     anywhere             anywhere
 REJECT     all  --  any    any     anywhere             anywhere             reject-with icmp-host-prohibited
 ```
 
-#Knowledge Background:
+# <a name="knowledge">Knowledge Background</a>
 - Ubuntu Command Line, Network Config (hostname, hosts, etc)
 - Basic Computer Network knowledge, like DNS, Subnet (IP, Mask), Gateway;
 - SSH, NAT, Forwarding
 - Hadoop structure
 - Basic understanding of above topics would make this work much easier
 
-#Things about hardware you should know:
+# <a name="hd">Things about hardware you should know</a>
 - There are four servers to set up, but only the first one (Losalamos) has access to the Internet;
 - The box connecting the servers is just a switch, not a router. So “forwarding” is needed to get the other three servers connected to the Internet;
 - Every server has two network adapters, “eth0” and “eth1”, and it can only connects to the Internet by “eth1”. So please double-check the connection ports;
@@ -59,7 +67,7 @@ REJECT     all  --  any    any     anywhere             anywhere             rej
 <hr>
 
 
-# Steps to Follow:
+# <a name="step">Steps to Follow</a>
 
 Overview: Given four blank server, we need to install system and establish a subnet. Finally install the requested hortonwork components. The network should be built as this image
 
@@ -67,11 +75,15 @@ Overview: Given four blank server, we need to install system and establish a sub
 
 ## Install Ubuntu
 
-Install Ubuntu (recommend 14.04) on each machine. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
+    Install Ubuntu (recommend 14.04) on each machine. The hard disks of four machines should already be erased. If not, press F11 when the system is starting and choose to start from the CD rom.
+    It may be hard to create a bootable USB stick on mac OS X. Failures occured for the following two approaches:
+    1. burn by command `dd` [ref](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx)
+    2. burn by UNetbootin [ref](http://unetbootin.github.io/)
+    Please update if there are methods that work. A convenient method is to install Ubuntu from CD.
 
-In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
+    In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
-During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine during the install process.
+    During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine during the install process.
 
 ## Establsh Subnet
 
@@ -92,6 +104,7 @@ During the installation, we need configured network of `losalamos` with eth1 and
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 Tip: read the instructions carefully and find out which is incoming network port and which is outgoing.
+[Here](https://gist.github.com/xuehung/8859e7162466918aac82) is an example of the iptable configuration
 
 ## Install Hadoop using Ambari
 
@@ -124,11 +137,22 @@ Tip: If you meet any permission problem of `hdfs`, check [this](http://stackover
 - If there's any "permission" problem, try "su", or "sudo" in each command;
 - Remember that in Mapreduce2.0, you should use the command "yarn" but not "hadoop".
 
-#Pitfalls you should pay attention to:
+# <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
 - You should down/up network adapters or reboot machines to make your network configurations work;
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
 `losalamos` should also hold a Ambari Agent to be part of the cluster;
 - Keep in mind that “Losalamos” should be one of the clients;
+- Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - (IMPORTANT) once you fail to set up the entire environment, it will be extremely hard to clean up and re-install (the official method doesn’t work in this case). So we highly recommend that you should keep retrying if you encounter problems when installing or deploying hadoop platform on Ambari.
+
+# <a name="recreate-cluster">How to Re-create the Cluster</a>
+In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
+1. Stop all services from Ambari
+2. Clean installed services on all four machines
+`python /usr/lib/python2.6/site-packages/ambari_agent/HostCleanup.py`
+3. Stop Ambari Server `sudo ambari-server stop`
+3. Reset Ambari Server `sudo ambari-server reset`
+4. Start Ambari Server again `sudo ambari-server start`
+5. Login to Ambari webpage and create the cluster
