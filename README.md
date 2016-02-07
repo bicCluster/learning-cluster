@@ -109,7 +109,7 @@ During the installation, we need configured network of `losalamos` with eth1 and
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 Tip: read the instructions carefully and find out which is incoming network port and which is outgoing.
-[Here](https://gist.github.com/xuehung/8859e7162466918aac82) is an example of the iptable configuration
+
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -163,3 +163,6 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 3. Reset Ambari Server `sudo ambari-server reset`
 4. Start Ambari Server again `sudo ambari-server start`
 5. Login to Ambari webpage and create the cluster
+
+
+If you cann't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work).
