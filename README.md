@@ -46,7 +46,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Hadoop read test on losalamos (1')
 - NAT test, get google home page on other three machines. (2')
 - Strong Password, password including at least a number and a letter and longer than 6 characters (2')
-- No Alert in Ambari. (1' each alert)
+- No Alert in Ambari. (1' each alert, 2' max)
 
 ### Minimum Iptables
 ```
