@@ -11,6 +11,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
     - [Test a MapReduce Program](#test-mapreduce)
 * [Pitfalls](#pitfall)
 * [How to Re-create the Cluster](#recreate-cluster)
+* [Basic Network Troubleshooting](#troubleshoot)
 
 # <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
@@ -100,9 +101,11 @@ During the installation, we need configured network of `losalamos` with eth1 and
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
 3. Configure `eth0` in the file `/ect/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`
 4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`.
+
 > * Using DHCP
 >> * Set up a DHCP server on `losalamos` first. [Here](https://www.youtube.com/watch?v=9Vc6-0smd64) is a video tutorial about how to set up a DHCP server on Ubuntu server. Be carefule about compatability. The system we install is Ubuntu 14.01. So download the version of DHCP server which is compatable with our system. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
 >> * Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help.
+
 > * Using staic IP
 >> * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `\etc\network\interfaces`
 5. Remember these configuration will take effect after 1) you reboot the machine or 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`
@@ -117,7 +120,6 @@ During the installation, we need configured network of `losalamos` with eth1 and
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 Tip: read the instructions carefully and find out which is incoming network port and which is outgoing.
-
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -174,3 +176,18 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 
 
 If you cann't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work).
+
+## <a name="trubleshoot">Basic Network Troubleshooting</a>
+### The basic formular
+> * Is the interface configured correctly? (Related command or files: ifconfig, /etc/network/interfaces, lspci, lsmod, dmesg)
+> * Is DNS/hostnames configured correctly? (Related command or files: /etc/hosts, /etc/resolv.conf, bind)
+> * Are the ARP tables correct? (arp -a)
+> * Can you ping the localhost? (ping localhost/127.0.0.1)
+> * Can you ping other local hosts (hosts on the local network) by IP address? How about hostname? (Related command: ping)
+> * Can you ping hosts on another network (Internet)? (Related command: ping)
+All your are doing is going either up or down the network model layers.
+
+### Explanations about several useful command
+> * `route -n`: To see your routing tables. `-n` means return numeric output
+> * `ping`: Ping your computer (by address, not host name) to determine that TCP/IP is functioning. You can also use option `-c` to determine how many packets you'are sending.
+> * `ifconfig`: Tell you everything about the network interface
