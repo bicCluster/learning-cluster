@@ -108,6 +108,7 @@ During the installation, we need configured network of `losalamos` with eth1 and
 
 * Using staic IP
 > * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `\etc\network\interfaces`
+
 5. Remember these configuration will take effect after 1) you reboot the machine or 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`
 6. You should be able to ping each other now using ip
 7. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up
