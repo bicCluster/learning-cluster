@@ -90,17 +90,25 @@ In the image above, the three innet machines' hostname are `alpha`, `beta` and `
 
 During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machine during the install process.
 
+[Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
+
+`losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
+
 ## <a name="install-subnet">Establsh Subnet</a>
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
-3. Set up its static ip to `10.0.0.2` on 'eth0 .
-3. Set up a dhcp server on `losalamos`. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
-4. Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
-5. Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help. Or you can set up the static IP to the three innet machine as the image above, this [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224). And these configuration will take effect after you reboot the machine
-7. You should be able to ping each other now using ip
-8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set
-9. You should be able to ping each other now using domain or hostname
+3. Configure `eth0` in the file `/ect/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`
+4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`.
+> * Using DHCP
+>> * Set up a DHCP server on `losalamos` first. [Here](https://www.youtube.com/watch?v=9Vc6-0smd64) is a video tutorial about how to set up a DHCP server on Ubuntu server. Be carefule about compatability. The system we install is Ubuntu 14.01. So download the version of DHCP server which is compatable with our system. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
+>> * Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help.
+> * Using staic IP
+>> * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `\etc\network\interfaces`
+5. Remember these configuration will take effect after 1) you reboot the machine or 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`
+6. You should be able to ping each other now using ip
+7. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up
+8. You should be able to ping each other now using domain or hostname
 
 ## <a name="iptables">Iptables</a>
 
