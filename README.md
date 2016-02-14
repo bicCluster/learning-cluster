@@ -184,8 +184,8 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 
 If you cann't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work).
 
-## <a name="trubleshoot">Basic Network Troubleshooting</a>
-### The basic formular
+# <a name="trubleshoot">Basic Network Troubleshooting</a>
+## Troubleshooting Checklist
 
 * Is the interface configured correctly? (Related command or files: ifconfig, /etc/network/interfaces, lspci, lsmod, dmesg)
 * Is DNS/hostnames configured correctly? (Related command or files: /etc/hosts, /etc/resolv.conf, bind)
@@ -195,7 +195,7 @@ If you cann't create iptables by following the steps above, you can refer to thi
 * Can you ping hosts on another network (Internet)? (Related command: ping)
 All your are doing is going either up or down the network model layers.
 
-### Explanations about several useful command
+## Explanations about several useful command
 
 * `route -n`: To see your routing tables. `-n` means return numeric output
 * `ping`: Ping your computer (by address, not host name) to determine that TCP/IP is functioning. You can also use option `-c` to determine how many packets you'are sending.
