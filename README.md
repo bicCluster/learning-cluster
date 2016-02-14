@@ -169,10 +169,10 @@ Tip: If you meet any permission problem of `hdfs`, check [this](http://stackover
 `losalamos` should also hold a Ambari Agent to be part of the cluster;
 - Keep in mind that “Losalamos” should be one of the clients;
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
-- (IMPORTANT) once you fail to set up the entire environment, it will be extremely hard to clean up and re-install (the official method doesn’t work in this case). So we highly recommend that you should keep retrying if you encounter problems when installing or deploying hadoop platform on Ambari.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
+
 1. Stop all services from Ambari
 2. Clean installed services on all four machines
 `python /usr/lib/python2.6/site-packages/ambari_agent/HostCleanup.py`
@@ -186,15 +186,17 @@ If you cann't create iptables by following the steps above, you can refer to thi
 
 ## <a name="trubleshoot">Basic Network Troubleshooting</a>
 ### The basic formular
-> * Is the interface configured correctly? (Related command or files: ifconfig, /etc/network/interfaces, lspci, lsmod, dmesg)
-> * Is DNS/hostnames configured correctly? (Related command or files: /etc/hosts, /etc/resolv.conf, bind)
-> * Are the ARP tables correct? (arp -a)
-> * Can you ping the localhost? (ping localhost/127.0.0.1)
-> * Can you ping other local hosts (hosts on the local network) by IP address? How about hostname? (Related command: ping)
-> * Can you ping hosts on another network (Internet)? (Related command: ping)
+
+* Is the interface configured correctly? (Related command or files: ifconfig, /etc/network/interfaces, lspci, lsmod, dmesg)
+* Is DNS/hostnames configured correctly? (Related command or files: /etc/hosts, /etc/resolv.conf, bind)
+* Are the ARP tables correct? (arp -a)
+* Can you ping the localhost? (ping localhost/127.0.0.1)
+* Can you ping other local hosts (hosts on the local network) by IP address? How about hostname? (Related command: ping)
+* Can you ping hosts on another network (Internet)? (Related command: ping)
 All your are doing is going either up or down the network model layers.
 
 ### Explanations about several useful command
-> * `route -n`: To see your routing tables. `-n` means return numeric output
-> * `ping`: Ping your computer (by address, not host name) to determine that TCP/IP is functioning. You can also use option `-c` to determine how many packets you'are sending.
-> * `ifconfig`: Tell you everything about the network interface
+
+* `route -n`: To see your routing tables. `-n` means return numeric output
+* `ping`: Ping your computer (by address, not host name) to determine that TCP/IP is functioning. You can also use option `-c` to determine how many packets you'are sending.
+* `ifconfig`: Tell you everything about the network interface
