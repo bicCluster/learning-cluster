@@ -36,7 +36,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Basically meet expectation (8')
 - Below expectation, there are some essential points are not tested (6')
 - Demo does not work will add another 3 points penalty on the previous grade.
-- Demo requires TA intervention will add 1 point penalty on the previous grade.
+- Demo requires TA intervention will add 1~2 points penalty on the previous grade depending on the time spend on intervention.
 
 ## Other (10')
 - Iptables is up on losamalos and has basic protection with minimum iptables (2')
