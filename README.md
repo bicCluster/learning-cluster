@@ -121,6 +121,7 @@ During the installation, we need configured network of `losalamos` with eth1 and
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 Tip: 
+
 1. Read the instructions **carefully** and find out **which is incoming network port and which is outgoing**.
 2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
