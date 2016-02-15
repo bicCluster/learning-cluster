@@ -42,8 +42,6 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Iptables is up on losamalos and has basic protection with minimum iptables (2')
 - Primary Name Node and Data Nodes should be on separate machines. (2')
 - Primary Name Node and Secondary Name Nodes should be on separate machines. (2')
-- Hadoop put test on losalamos (1')
-- Hadoop read test on losalamos (1')
 - NAT test, get google home page on other three machines. (2')
 - Strong Password, password including at least a number and a letter and longer than 6 characters (2')
 - No Alert in Ambari. (1' each alert, 2' max)
