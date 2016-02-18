@@ -108,9 +108,10 @@ During the installation, we need configured network of `losalamos` with eth1 and
 > * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `/etc/network/interfaces`
 
 5. After making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. 
-6. You should be able to ping each other now using ip.
-7. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
-8. You should be able to ping each other now using domain or hostname
+6. **DO NOT** reboot losalamos after condifurating. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration. Otherwise you may lose your connection to external network.
+7. You should be able to ping each other now using ip.
+8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
+9. You should be able to ping each other now using domain or hostname
 
 ## <a name="iptables">Iptables</a>
 
@@ -123,23 +124,32 @@ Tip:
 1. Read the instructions **carefully** and find out **which is incoming network port and which is outgoing**.
 2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
+3. Don't overthink it. Just type in the commands, they are not script.
+4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the dns-nameserver if written in all four configuration files; or 3) check carefully the spelling of your configuration files.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
 Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 
 TIPS:
-
+ 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`
-* The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  'Ambari Metrics'. Some other services may fail so do not install services that you do not need.
-* You need to install both `ambari-server` and `ambari-agent` on `losamalos`, and you only need to install `ambari-agent` on three innet machine.
-* After you install the `ambari-server` on `losamalos`, the java 1.8 will be installed automatically, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
-* You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
+* Set up the ssh carefully. After this part being done, you can remotely control those four machines with your own laptop.
 * You need to set up password-less SSH during the process:
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
-* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x). If the IP address is 127.0.0.1 that's not correct, check whether the four /etc/hosts files are same with each other. Modify /etc/hosts if necessary, then restart both ambari-server and all ambari-clients.
+* The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
+* You need to install both `ambari-server` and `ambari-agent` on `losamalos`, and you only need to install `ambari-agent` on three innet machine,
+* But if everything goes smoothly, you only have to manully install `ambari-server` on `losalamos`, and everything else can be doen through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
+* While installing `ambari-server` on `losamalos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
+* Your java directory should be under `/usr/jdk64/`. Carefully set it to your configuration file.
+* While going through the Ambari Install Wizard, there are several parts you should watch out: 
+	- Make sure password-less ssh is correctly set up, which will let you ssh from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
+	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly.
+	- When assinging master, go through the `Grading Criteria` in `Requirements` section carefully.
+* You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
+* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four /etc/hosts files are same with each other. Modify /etc/hosts if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under /var/log
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
