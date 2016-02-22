@@ -89,6 +89,8 @@ In the image above, the three innet machines' hostname are `alpha`, `beta` and `
 
 During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, it will show "network autoconfiguration failed", just ignore and continue.
 
+You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops.
+
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
 `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
@@ -97,11 +99,13 @@ During the installation, we need configured network of `losalamos` with eth1 and
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
-3. Configure `eth0` in the file `/ect/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section.
+3. Configure `eth0` in the file `/etc/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. Since this file is read-only, you may want to edit it with sudo.
 4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`.
 
 * Using DHCP
-> * Set up a DHCP server on `losalamos` first. [Here](https://www.youtube.com/watch?v=9Vc6-0smd64) is a video tutorial about how to set up a DHCP server on Ubuntu server. Be carefule about compatability. The system we install is Ubuntu 14.01. So download the version of DHCP server which is compatable with our system. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you cancheck [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
+> * Set up a DHCP server on `losalamos` first. [Here](https://www.youtube.com/watch?v=9Vc6-0smd64) is a video tutorial about how to set up a DHCP server on Ubuntu server. Be carefule about compatability. The system we install is Ubuntu 14.01. So download the version of DHCP server which is compatable with our system. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you can check [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
+> * Here is some quick tips for setting up the dhcp server. After installed dhcp in `losalamos`, you need to configure it in file `/etc/dhcp/dhcpd.conf`. In this file, you need to configure an internal subnet with `subnet`, `netmask`, `range`, `domain-name-servers`, `default-lease-time` and `max-lease-time`. You can configure the other parameters, but the stuff above is considered necessary to let your dhcp server work. After configuration, run `/etc/init.d/isc-dhcp-server restart` to restart your dhcp server. As always, please use sudo.
+
 > * Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help.
 
 * Using staic IP
