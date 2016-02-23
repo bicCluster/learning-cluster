@@ -104,7 +104,8 @@ You probably want to install the OpenSSH during installation, so that you can th
 
 * Using DHCP
 > * Set up a DHCP server on `losalamos` first. [Here](https://www.youtube.com/watch?v=9Vc6-0smd64) is a video tutorial about how to set up a DHCP server on Ubuntu server. Be carefule about compatability. The system we install is Ubuntu 14.01. So download the version of DHCP server which is compatable with our system. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you can check [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
-> * Here is some quick tips for setting up the dhcp server. After installed dhcp in `losalamos`, you need to configure it in file `/etc/dhcp/dhcpd.conf`. In this file, you need to configure an internal subnet with `subnet`, `netmask`, `range`, `domain-name-servers`, `default-lease-time` and `max-lease-time`. You can configure the other parameters, but the stuff above is considered necessary to let your dhcp server work. After configuration, run `/etc/init.d/isc-dhcp-server restart` to restart your dhcp server. As always, please use sudo.
+
+Here is some quick tips for setting up the dhcp server. After installed dhcp in `losalamos`, you need to configure it in file `/etc/dhcp/dhcpd.conf`. In this file, you need to configure an internal subnet with `subnet`, `netmask`, `range`, `domain-name-servers`, `default-lease-time` and `max-lease-time`. You can configure the other parameters, but the stuff above is considered necessary to let your dhcp server work. After configuration, run `/etc/init.d/isc-dhcp-server restart` to restart your dhcp server. As always, please use sudo.
 
 > * Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help.
 
@@ -137,7 +138,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 
 TIPS:
  
-* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`
+* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * Set up the ssh carefully. After this part being done, you can remotely control those four machines with your own laptop.
 * You need to set up password-less SSH during the process:
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
