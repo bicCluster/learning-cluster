@@ -112,8 +112,8 @@ Here is some quick tips for setting up the dhcp server. After installed dhcp in 
 * Using staic IP
 > * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `/etc/network/interfaces`
 
-5. After making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. 
-6. **DO NOT** reboot losalamos after condifurating. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration. Otherwise you may lose your connection to external network.
+5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
+6. **DO NOT** reboot losalamos after condifurating. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Not eth1 for losalamos!). Otherwise you may lose your connection to external network. 
 7. You should be able to ping each other now using ip.
 8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
 9. You should be able to ping each other now using domain or hostname
@@ -130,7 +130,7 @@ Tip:
 2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
 3. Don't overthink it. Just type in the commands, they are not script.
-4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the dns-nameserver if written in all four configuration files; or 3) check carefully the spelling of your configuration files.
+4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the "dns-nameservers" if written in all four configuration files; or 3) check carefully the spelling of your configuration files.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
