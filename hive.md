@@ -3,7 +3,7 @@ To install Hive on Cluster and make it run automatically on system startup.
 
 # Steps
 
-1. Go to the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) and choose to install a new service - 'Hive'. It will reminds you that you need to install some extra services.
+1. Go to the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) and choose to install a new service - 'Hive'. It will reminds you that you need to install some extra services. (Tips:install new service step by step, do not select to install them all in a time, which may have complex errors)
 2. Set up the Hive Directory and Permission. Find more detailes in [here](http://docs.hortonworks.com/HDPDocuments/HDP1/HDP-1.2.4/bk_installing_manually_book/content/rpm-chap6.html) (I'm not sure if its a MUST step or not. You can try go directly to validate step and see.)
 3. To validate whether Hive has been installed rightly, run instructions [here](http://docs.hortonworks.com/HDPDocuments/HDP1/HDP-1.2.4/bk_installing_manually_book/content/rpm-chap6-5.html).
 4. To further validate you installation, you will need to create a script and run it on hive. You can find more details [here](http://www.edureka.co/blog/apache-hadoop-hive-script/). 
