@@ -103,13 +103,15 @@ You probably want to install the OpenSSH during installation, so that you can th
 4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`.
 
 * Using DHCP
+
 > * Set up a DHCP server on `losalamos` first. [Here](https://www.youtube.com/watch?v=9Vc6-0smd64) is a video tutorial about how to set up a DHCP server on Ubuntu server. Be carefule about compatability. The system we install is Ubuntu 14.01. So download the version of DHCP server which is compatable with our system. The DNS server of CMU are [here](https://www.cmu.edu/computing/partners/dept-computing/services/domain.html) And you can check [this](http://askubuntu.com/questions/140126/how-do-i-install-and-configure-a-dhcp-server) for DHCP configuration.
 
-Here is some quick tips for setting up the dhcp server. After installed dhcp in `losalamos`, you need to configure it in file `/etc/dhcp/dhcpd.conf`. In this file, you need to configure an internal subnet with `subnet`, `netmask`, `range`, `domain-name-servers`, `default-lease-time` and `max-lease-time`. You can configure the other parameters, but the stuff above is considered necessary to let your dhcp server work. After configuration, run `/etc/init.d/isc-dhcp-server restart` to restart your dhcp server. As always, please use sudo.
+> * Here is some quick tips for setting up the dhcp server. After installed dhcp in `losalamos`, you need to configure it in file `/etc/dhcp/dhcpd.conf`. In this file, you need to configure an internal subnet with `subnet`, `netmask`, `range`, `domain-name-servers`, `default-lease-time` and `max-lease-time`. You can configure the other parameters, but the stuff above is considered necessary to let your dhcp server work. After configuration, run `/etc/init.d/isc-dhcp-server restart` to restart your dhcp server. As always, please use sudo.
 
 > * Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help.
 
 * Using staic IP
+
 > * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `/etc/network/interfaces`
 
 5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
@@ -123,6 +125,8 @@ Here is some quick tips for setting up the dhcp server. After installed dhcp in 
 ![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
 
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
+
+You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction.
 
 Tip: 
 
@@ -177,6 +181,7 @@ Steps:
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files  with javac and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
+5. Run the program under the user 'hdfs' (HADOOP_USER_NAME=hdfs)
 
 Tip: If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
 
