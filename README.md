@@ -181,7 +181,7 @@ Steps:
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files  with javac and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
-5. Run the program under the user 'hdfs' (HADOOP_USER_NAME=hdfs)
+5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs)
 
 Tip: If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
 
