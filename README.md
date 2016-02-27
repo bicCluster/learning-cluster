@@ -22,8 +22,9 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - You have 3 whole days minus 2h for grading from 1:00 PM the first day to 11:00 AM the last day.
 
 
-#Grading Criteria (30')
-##Wiki (10')
+# Grading Criteria (30')
+
+## Wiki (10')
 - Beyond expectation, more than TA would write (12')
 - Meet expectation (10')
 - Basically meet expectation, missing some points that TA think is necessary for other groups (8')
@@ -129,7 +130,7 @@ For now, the machines in the subnet are unable to connect the real internet. Thi
 
 You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction.
 
-Tip: 
+### Tips
 
 1. Read the instructions **carefully** and find out **which is incoming network port and which is outgoing**. (See the picture above).
 2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
@@ -141,7 +142,7 @@ Tip:
 
 Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 
-TIPS:
+### Tips
  
 * Select default setting when installing Ambari Server.
 * If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
@@ -176,7 +177,7 @@ TIPS:
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
 
-Steps:
+### Steps
 
 1. Create a input directory under the user of `hdfs`
 2. Write the test MapReduce program (eg. wordcount)
@@ -184,8 +185,9 @@ Steps:
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
 5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs)
 
-Tip: If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
+### Tips
 
+- If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
 - Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
 - If there's any "permission" problem, try using su (root), or `sudo` in each command;
