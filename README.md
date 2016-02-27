@@ -154,7 +154,7 @@ TIPS:
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
-	- Use the private key: `id_rsa`
+	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand.
 	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
 * Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
