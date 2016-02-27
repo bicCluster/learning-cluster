@@ -146,7 +146,7 @@ TIPS:
 * Select default setting when installing Ambari Server.
 * If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
-* Set up the ssh carefully. After this part being done, you can remotely control those four machines with your own laptop.
+* Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 * You need to set up password-less SSH during the process:
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
