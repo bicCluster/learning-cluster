@@ -180,7 +180,7 @@ Steps:
 
 1. Create a input directory under the user of `hdfs`
 2. Write the test MapReduce program (eg. wordcount)
-3. Compile the java files to class files  with javac and archive the class files into `jar`
+3. Compile the java files to class files with `javac` and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
 5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs)
 
@@ -188,8 +188,8 @@ Tip: If you meet any permission problem of `hdfs`, check [this](http://stackover
 
 - Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
-- If there's any "permission" problem, try "su", or "sudo" in each command;
-- Remember that in Mapreduce2.0, you should use the command "yarn" but not "hadoop".
+- If there's any "permission" problem, try using su (root), or `sudo` in each command;
+- Remember that in MapReduce 2.0, you should use the command `yarn` but not `hadoop`.
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
