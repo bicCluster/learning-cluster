@@ -117,8 +117,8 @@ You probably want to install the OpenSSH during installation, so that you can th
 
 5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 6. **DO NOT** reboot losalamos after condifurating. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Not eth1 for losalamos!). Otherwise you may lose your connection to external network. 
-7. You should be able to ping each other now using ip.
-8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
+7. You should be able to ping each other now using IP.
+8. Edit `/etc/hosts` files on four machines, telling them the connections between IP and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
 9. You should be able to ping each other now using domain or hostname
 
 ## <a name="iptables">Iptables</a>
@@ -135,7 +135,7 @@ Tip:
 2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
 3. Don't overthink it. Just type in the commands, they are not script.
-4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the "dns-nameservers" if written in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check /etc/sysctl.conf is well modified.
+4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -144,7 +144,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 TIPS:
  
 * Select default setting when installing Ambari Server.
-* If you come across Error when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
+* If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * Set up the ssh carefully. After this part being done, you can remotely control those four machines with your own laptop.
 * You need to set up password-less SSH during the process:
@@ -169,8 +169,8 @@ TIPS:
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
 	- Restart the service before runing Demo
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
-* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four /etc/hosts files are same with each other. Modify /etc/hosts if necessary, then restart both ambari-server and all ambari-clients.
-* If something goes wrong, check your firewall settings or you may find causes by looking at log files under /var/log
+* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
+* If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
@@ -197,7 +197,7 @@ Tip: If you meet any permission problem of `hdfs`, check [this](http://stackover
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
 `losalamos` should also hold a Ambari Agent to be part of the cluster;
-- Keep in mind that “Losalamos” should be one of the clients;
+- Keep in mind that `losalamos` should be one of the clients;
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
