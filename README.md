@@ -65,8 +65,9 @@ REJECT     all  --  any    any     anywhere             anywhere             rej
 # <a name="hd">Things about hardware you should know</a>
 - There are four servers to set up, but only the first one (Losalamos) has access to the Internet;
 - The box connecting the servers is just a switch, not a router. So “forwarding” is needed to get the other three servers connected to the Internet;
-- Every server has two network adapters, “eth0” and “eth1”, and it can only connects to the Internet by “eth1”. So please double-check the connection ports;
-- Since “Losalamos” uses “eth1” to connect to the Internet, it should use “eth0” for the sub network.
+- Every server has two network adapters, `eth0` and `eth1`, and it can only connects to the Internet by `eth1`. So please double-check the connection ports;
+- Since `losalamos` uses `eth1` to connect to the Internet, it should use `eth0` for the sub network.
+- Keep the roles of `eth0` and `eth1` in mind when you are configuring iptables with the linked tutorials: you may need to change the bash command given in those tutorials.
 
 <hr>
 
