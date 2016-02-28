@@ -172,6 +172,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
 * Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
+* If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
