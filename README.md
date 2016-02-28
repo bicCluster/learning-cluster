@@ -15,15 +15,16 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 
 # <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
-- Network Structure: NAT, Losalamos need to be the NAT server. Losalamos can be connected to the port on wall through "eno2".
+- Network Structure: NAT, `losalamos` need to be the NAT server. `losalamos` can be connected to the port on wall through "eno2".
 - Install Choice: [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
-- You need to install 'HDFS','MapReduce2','Yarn', 'Ambari Metrics' and you must install the package we are currently learning.
+- You need to install `HDFS`,`MapReduce2 + YARN`, `Ambari Metrics`, and `ZooKeeper` and you must install the package we are currently learning.
 - You must keep a wiki of the necessary steps you think may be helpful to the next group here. Change of the wiki also is part of the grading.
 - You have 3 whole days minus 2h for grading from 1:00 PM the first day to 11:00 AM the last day.
 
 
-#Grading Criteria (30')
-##Wiki (10')
+# Grading Criteria (30')
+
+## Wiki (10')
 - Beyond expectation, more than TA would write (12')
 - Meet expectation (10')
 - Basically meet expectation, missing some points that TA think is necessary for other groups (8')
@@ -65,8 +66,9 @@ REJECT     all  --  any    any     anywhere             anywhere             rej
 # <a name="hd">Things about hardware you should know</a>
 - There are four servers to set up, but only the first one (Losalamos) has access to the Internet;
 - The box connecting the servers is just a switch, not a router. So “forwarding” is needed to get the other three servers connected to the Internet;
-- Every server has two network adapters, “eth0” and “eth1”, and it can only connects to the Internet by “eth1”. So please double-check the connection ports;
-- Since “Losalamos” uses “eth1” to connect to the Internet, it should use “eth0” for the sub network.
+- Every server has two network adapters, `eth0` and `eth1`, and it can only connects to the Internet by `eth1`. So please double-check the connection ports;
+- Since `losalamos` uses `eth1` to connect to the Internet, it should use `eth0` for the sub network.
+- Keep the roles of `eth0` and `eth1` in mind when you are configuring iptables with the linked tutorials: you may need to change the bash command given in those tutorials.
 
 <hr>
 
@@ -116,8 +118,8 @@ You probably want to install the OpenSSH during installation, so that you can th
 
 5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 6. **DO NOT** reboot losalamos after condifurating. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Not eth1 for losalamos!). Otherwise you may lose your connection to external network. 
-7. You should be able to ping each other now using ip.
-8. Edit `/etc/hosts` files on four machines, telling them the connections between ip and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
+7. You should be able to ping each other now using IP.
+8. Edit `/etc/hosts` files on four machines, telling them the connections between IP and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
 9. You should be able to ping each other now using domain or hostname
 
 ## <a name="iptables">Iptables</a>
@@ -128,24 +130,24 @@ For now, the machines in the subnet are unable to connect the real internet. Thi
 
 You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction.
 
-Tip: 
+### Tips
 
 1. Read the instructions **carefully** and find out **which is incoming network port and which is outgoing**. (See the picture above).
 2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
 3. Don't overthink it. Just type in the commands, they are not script.
-4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the "dns-nameservers" if written in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check /etc/sysctl.conf is well modified.
+4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
 Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 
-TIPS:
+### Tips
  
 * Select default setting when installing Ambari Server.
-* If you come across Error when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
+* If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
-* Set up the ssh carefully. After this part being done, you can remotely control those four machines with your own laptop.
+* Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 * You need to set up password-less SSH during the process:
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
@@ -153,7 +155,7 @@ TIPS:
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
-	- Use the private key: `id_rsa`
+	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand.
 	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
 * Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
@@ -168,28 +170,28 @@ TIPS:
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
 	- Restart the service before runing Demo
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
-* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four /etc/hosts files are same with each other. Modify /etc/hosts if necessary, then restart both ambari-server and all ambari-clients.
-* If something goes wrong, check your firewall settings or you may find causes by looking at log files under /var/log
-* If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
+* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
+* If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
 
-Steps:
+### Steps
 
 1. Create a input directory under the user of `hdfs`
 2. Write the test MapReduce program (eg. wordcount)
-3. Compile the java files to class files  with javac and archive the class files into `jar`
+3. Compile the java files to class files with `javac` and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
 5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs)
 
-Tip: If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
+### Tips
 
+- If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
 - Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
-- If there's any "permission" problem, try "su", or "sudo" in each command;
-- Remember that in Mapreduce2.0, you should use the command "yarn" but not "hadoop".
+- If there's any "permission" problem, try using su (root), or `sudo` in each command;
+- Remember that in MapReduce 2.0, you should use the command `yarn` but not `hadoop`.
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
@@ -197,7 +199,7 @@ Tip: If you meet any permission problem of `hdfs`, check [this](http://stackover
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
 `losalamos` should also hold a Ambari Agent to be part of the cluster;
-- Keep in mind that “Losalamos” should be one of the clients;
+- Keep in mind that `losalamos` should be one of the clients;
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
