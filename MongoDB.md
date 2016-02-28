@@ -33,7 +33,7 @@ Now that you have successfully install MongoDB in your cluster, let's go over so
 
 2. To stop it, just use stop:
 
-> * sudo service mongod start
+> * sudo service mongod stop
 
 3. You can also restart using the restart command
 
