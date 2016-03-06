@@ -155,7 +155,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
-	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand.
+	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference.
 	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
 * Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
@@ -173,6 +173,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 * Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 * If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
+* Make sure that you have Python 2.6 installed, sometimes it gives out an error if you continue with Python 2.7. You could use the [link](http://askubuntu.com/questions/125342/how-can-i-install-python-2-6-on-12-04) or download it from Python website.
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
@@ -184,7 +185,8 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files with `javac` and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
-5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs)
+5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs).
+6. If you want to move the files to HDFS via Ambari UI, you could follow the steps mentioned [here](https://developer.ibm.com/hadoop/blog/2015/10/22/browse-hdfs-via-ambari-files-view/). Also, it is better to create a separate user 'hdfs' instead of 'admin' in Ambari if you follow this approach and give it root permissions in Ambari.
 
 ### Tips
 
@@ -202,6 +204,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 `losalamos` should also hold a Ambari Agent to be part of the cluster;
 - Keep in mind that `losalamos` should be one of the clients;
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
+- If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
