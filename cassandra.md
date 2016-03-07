@@ -60,7 +60,7 @@ or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/in
 2. Download cassandra from the website http://cassandra.apache.org/download/, and decompress the file.
 3. Configure files. Find the configuration file cassandra/conf/cassandra.yaml, and add these values:
    data_file_directories:
-     - /var/lib/cassandra/data
+      - /var/lib/cassandra/data
    commitlog_directory: /var/lib/cassandra/commitlog
    saved_caches_directory: /var/lib/cassandra/saved_caches
   
