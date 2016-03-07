@@ -57,7 +57,9 @@ or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/in
 
 #Another way to install Cassandra
 1. You first need to make sure the version of java on your machine is at least jdk7, jdk8 is the best. Otherwise you can not start cassandra.
+
 2. Download cassandra from the website http://cassandra.apache.org/download/, and decompress the file.
+
 3. Configure files. Find the configuration file cassandra/conf/cassandra.yaml, and add these values:
    
    data_file_directories:
@@ -68,17 +70,31 @@ or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/in
    saved_caches_directory: /var/lib/cassandra/saved_caches
   
    Attention: You have to add these key-values in exactly the same format as above, or there will be an exception when you    start cassandra. There is a space between key and value
+
 4. Create these directories:
+   
    sudo mkdir -p /var/lib/cassandra/data
+   
    sudo mkdir -p /var/lib/cassandra/saved_caches
+   
    sudo mkdir -p /var/lib/cassandra/commitlog
+
    sudo mkdir -p /var/log/cassandra/
 5. Change the property of these directories:
+   
    sudo chown -R root:root /var/lib/cassandra
+   
    sudo chown -R root:root /var/log/cassandra/
+
    Attention: "root:root" should be the user that you are logging in your system. Here I use root
+
 6. Configure the environment variables, open the file /etc/environment and add the environment variable:CASSANDRA_HOME=The    address of your cassandra.
+
 7. Make your environment variables effective by executing the command:. /etc/environment
+
 8. Start your cassandra. Enter the bin file of your cassandra and execute the command:./cassandra -f
-   Attention: If you see an exception like local_host:7000 port number is in use of another process, change the storage       port number to 8000 or 9000.
+   
+   Attention: If you see an exception like local_host:7000 port number is in use of another process, change the storage       
+   port number to 8000 or 9000.
+
 9. Access cassandra by typing in command:./cqlsh. Then you can use the instructions above to create your own tables.
