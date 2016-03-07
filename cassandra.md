@@ -62,7 +62,9 @@ or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/in
    
    data_file_directories:
       - /var/lib/cassandra/data
+
    commitlog_directory: /var/lib/cassandra/commitlog
+   
    saved_caches_directory: /var/lib/cassandra/saved_caches
   
    Attention: You have to add these key-values in exactly the same format as above, or there will be an exception when you    start cassandra. There is a space between key and value
