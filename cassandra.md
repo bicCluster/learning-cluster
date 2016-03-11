@@ -31,6 +31,9 @@ available on their [website](http://docs.datastax.com/en//cassandra/2.0/cassandr
 > * sudo service cassandra stop
 > * sudo rm -rf /var/lib/cassandra/data/system/*
 
+7.Open port for Cassandra in iptables:
+> * sudo iptable -A INPUT -p tcp --dport XXXX -j ACCEPT
+> * XXXX is the port number of Cassandra, refer [this](http://docs.datastax.com/en/latest-dse/datastax_enterprise/sec/secConfFirePort.html?scroll=secConfFirePort__cassandrayaml_unique_24)
 
 ## Steps for testing:
 
