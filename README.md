@@ -241,3 +241,4 @@ All your are doing is going either up or down the network model layers.
 * `route -n`: To see your routing tables. `-n` means return numeric output
 * `ping`: Ping your computer (by address, not host name) to determine that TCP/IP is functioning. You can also use option `-c` to determine how many packets you'are sending.
 * `ifconfig`: Tell you everything about the network interface
+* `iptables -L -v` Check current valid rule in iptable
