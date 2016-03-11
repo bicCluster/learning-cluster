@@ -97,6 +97,8 @@ You probably want to install the OpenSSH during installation, so that you can th
 
 `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
 
+Notice: the openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
+
 ## <a name="install-subnet">Establish Subnet</a>
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
@@ -121,6 +123,7 @@ You probably want to install the OpenSSH during installation, so that you can th
 7. You should be able to ping each other now using IP.
 8. Edit `/etc/hosts` files on four machines, telling them the connections between IP and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
 9. You should be able to ping each other now using domain or hostname
+10. In losalamos /etc/hosts, remember to change the default ip address of losalamos to 10.0.0.2.
 
 ## <a name="iptables">Iptables</a>
 
@@ -153,6 +156,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
+	- Make sure the password-less SSH works in both directions: scp the private and public key to the .ssh folder of four machine and modify authorized_key file.
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
 	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference.
@@ -173,6 +177,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 * Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 * If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
+[this](https://access.redhat.com/solutions/46111).
 * Make sure that you have Python 2.6 installed, sometimes it gives out an error if you continue with Python 2.7. You could use the [link](http://askubuntu.com/questions/125342/how-can-i-install-python-2-6-on-12-04) or download it from Python website.
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
