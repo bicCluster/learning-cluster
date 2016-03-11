@@ -198,6 +198,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
 - Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
+- The output folder of your map reduce program should not exist when executing the jar program.
 - If there's any "permission" problem, try using su (root), or `sudo` in each command;
 - Remember that in MapReduce 2.0, you should use the command `yarn` but not `hadoop`.
 
