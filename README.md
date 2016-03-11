@@ -131,7 +131,7 @@ Notice: the openssh-server should be installed on all of the four machines for s
 
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
-You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction.
+You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 	
 
 ### Tips
 
@@ -214,7 +214,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
 
-1. Stop all services from Ambari
+1. Stop all services from Ambari first, both in losalamos and 3 slave machines. On slave machines, `sudo ambari-client stop`. On losalamos, do `sudo ambari-client stop` and `sudo ambari-server stop`.
 2. Clean installed services on all four machines
 `python /usr/lib/python2.6/site-packages/ambari_agent/HostCleanup.py`
 3. Stop Ambari Server `sudo ambari-server stop`
