@@ -102,7 +102,7 @@ Notice: the openssh-server should be installed on all of the four machines for s
 
 ## <a name="install-subnet">Establish Subnet</a>
 
-Notice: during the entire process (even after you finish this part), you’d better not reboot any of the four machines after you have done with following establish subnet steps, otherwise you may lose your network connection and need to re-install the OS once again (Welcome for the notes if you could solve this problems without re-installing OS).
+Notice: during the entire process (even after you finish this part), you’d better not reboot any of the four machines after you have done with following establish subnet steps, otherwise you may lose your network connection and need to install the OS once again (Welcome for the notes if you could solve this problems without reinstalling OS).
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
@@ -124,9 +124,8 @@ Notice: during the entire process (even after you finish this part), you’d bet
 5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 6. **DO NOT** reboot losalamos after configuration. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Not eth1 for losalamos! And if it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
 7. You should be able to ping each other now using IP.
-8. Edit `/etc/hosts` files on four machines, telling them the connections between IP and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up.
-9. You should be able to ping each other now using domain or hostname
-10. In losalamos /etc/hosts, remember to change the default ip address of losalamos to 10.0.0.2.
+8. Edit `/etc/hosts` files on four machines, telling them the connections between IP and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up. In losalamos `/etc/hosts`, remember to change the default ip address of losalamos to 10.0.0.2.
+9. You should be able to ping each other now using domain or hostname.
 
 ## <a name="iptables">Iptables</a>
 
