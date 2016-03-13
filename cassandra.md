@@ -11,29 +11,37 @@ available on their [website](http://docs.datastax.com/en//cassandra/2.0/cassandr
 
 # Steps for Installation:
 
-1. Check the java version and see that the machine has atleast Java 7/8.
-> * java -version
-
+1. Check the java version and see that the machine has at least Java 7/8.
+```
+java -version
+```
 2. Add Datastax community repository to the sources list file: 
-> * echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
-
+```
+echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+```
 3. Add the Datastax repository key to the aptitude trusted keys:
-> * curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
-
+```
+curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+```
 4. Java Native Access (JNA) is required for production installations (latest version recommended). refer to : [Installing the JNA on Debian or Ubuntu Systems](http://docs.datastax.com/en//cassandra/2.0/cassandra/install/installJnaDeb.html)
-> * sudo apt-get install libjna-java
-
+```
+sudo apt-get install libjna-java
+```
 5. Install Cassandra:
-> * sudo apt-get update
-> * sudo apt-get install dsc20=2.0.11-1 cassandra=2.0.11
-
+```
+sudo apt-get update
+sudo apt-get install dsc20=2.0.11-1 cassandra=2.0.11
+```
 6. As the system starts the Cassandra service automatically, the server needs to be stopped and data must be cleared:
-> * sudo service cassandra stop
-> * sudo rm -rf /var/lib/cassandra/data/system/*
-
-7.Open port for Cassandra in iptables:
-> * sudo iptable -A INPUT -p tcp --dport XXXX -j ACCEPT
-> * XXXX is the port number of Cassandra, refer [this](http://docs.datastax.com/en/latest-dse/datastax_enterprise/sec/secConfFirePort.html?scroll=secConfFirePort__cassandrayaml_unique_24)
+```
+sudo service cassandra stop
+sudo rm -rf /var/lib/cassandra/data/system/*
+```
+7. Open port for Cassandra in iptables:
+```
+sudo iptable -A INPUT -p tcp --dport XXXX -j ACCEPT
+```
+  * XXXX is the port number of Cassandra, refer [this](http://docs.datastax.com/en/latest-dse/datastax_enterprise/sec/secConfFirePort.html?scroll=secConfFirePort__cassandrayaml_unique_24)
 
 ## Steps for testing:
 
@@ -78,20 +86,17 @@ or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/in
    Attention: You have to add these key-values in exactly the same format as above, or there will be an exception when you    start cassandra. There is a space between key and value
 
 4. Create these directories:
-   
+   ```
    sudo mkdir -p /var/lib/cassandra/data
-   
    sudo mkdir -p /var/lib/cassandra/saved_caches
-   
    sudo mkdir -p /var/lib/cassandra/commitlog
-
    sudo mkdir -p /var/log/cassandra/
+   ```
 5. Change the property of these directories:
-   
+   ```
    sudo chown -R root:root /var/lib/cassandra
-   
    sudo chown -R root:root /var/log/cassandra/
-
+   ```
    Attention: "root:root" should be the user that you are logging in your system. Here I use root
 
 6. Configure the environment variables, open the file /etc/environment and add the environment variable:CASSANDRA_HOME=The    address of your cassandra.
