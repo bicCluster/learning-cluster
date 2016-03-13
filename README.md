@@ -226,7 +226,7 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 5. Login to Ambari webpage and create the cluster
 
 
-If you cann't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work).
+If you cann't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
 
 # <a name="trubleshoot">Basic Network Troubleshooting</a>
 ## Troubleshooting Checklist
