@@ -59,7 +59,7 @@ http://ip-address:port
 # Instructions for running Neo4j
 
 After you get on the Neo4j web adminstration, you will see the similar view as following (There should be 0 for nodes, properties and relationships if you login for the first time):
-![image](network.png)
+![image](Neo4j.png)
 And [this link](https://www.youtube.com/watch?v=bqvDSioHYq8) can give you a basic idea about how to take use of this webadmin.
 
 There are four sections that might be useful:
