@@ -62,7 +62,7 @@ http://ip-address:port
 
 After you get on the Neo4j web adminstration, you will see the similar view as following (There should be 0 for nodes, properties and relationships if you login for the first time):
 ![image](Neo4j.png)
-And [this link](https://www.youtube.com/watch?v=bqvDSioHYq8) can give you a basic idea about how to take use of this webadmin.
+And [this link](https://www.youtube.com/watch?v=bqvDSioHYq8) can give you a basic idea about how to make use of this webadmin.
 
 There are four sections that might be useful:
 
