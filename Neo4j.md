@@ -58,8 +58,8 @@ http://ip-address:port
 
 # Instructions for running Neo4j
 
-After you get on the Neo4j web adminstration, you will see the similar view as following(There should be 0 for nodes, properties and relationships if you login for the first time):
-
+After you get on the Neo4j web adminstration, you will see the similar view as following (There should be 0 for nodes, properties and relationships if you login for the first time):
+![image](network.png)
 And [this link](https://www.youtube.com/watch?v=bqvDSioHYq8) can give you a basic idea about how to take use of this webadmin.
 
 There are four sections that might be useful:
@@ -69,7 +69,7 @@ You can get overall information such as how many nodes, properties and relations
 To the right are charts that show the total number of primitive entities in the database over time. You can select the timespan to show with the links in the top right corner of the chart. To get specific info of some point in any chart, simply hover the mouse over the chart line.
 
 - Data browser:
-In this section, you can create nodes, relationships using the top right bottoms, and set properties on each node, and you can use Cypher query language([this](http://neo4j.com/docs/1.8/cypher-query-lang.html) can help you with Cypher syntax) for working with your data, and click top right bottom "switch view mode" to view your data in graph view mode.
+In this section, you can create nodes, relationships using the top right bottoms, and set properties on each node, and you can use Cypher query language ([this](http://neo4j.com/docs/1.8/cypher-query-lang.html) can help you with Cypher syntax) for working with your data, and click top right bottom "switch view mode" to view your data in graph view mode.
 
 - Console:
 The Neo4j Shell, allows you to use the Cypher query language for working with your graph, as well as other powerful shell features.
