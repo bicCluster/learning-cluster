@@ -1,5 +1,6 @@
 # Instructions for installing Neo4j
 While installing Neo4j, you might make use of [this](http://neo4j.com/docs/stable/ha-setup-tutorial.html) and [this](https://dzone.com/articles/setting-neo4j-cluster-amazon) instructions.
+
 You need to go through most of the following steps on four machines, we will take losalamos for example.
 
 ### Steps
@@ -15,8 +16,10 @@ wget http://dist.neo4j.org/neo4j-enterprise-1.8-unix.tar.gz
 tar -xvzf neo4j-enterprise-1.8-unix.tar.gz
 ```
 3. Setting the file limits to 90000 for the ubuntu user.
-`ulimit -n 90000`
-4.  configure Neo4j to use it. Edit `neo4j/conf/neo4j.properties` and `neo4j/conf/neo4j-server.properties` files based on [this](https://dzone.com/articles/setting-neo4j-cluster-amazon) instructions. Make sure you modified `ha.server_id`, `ha.coordinators`, `ha.server` sections.
+```
+ulimit -n 90000
+```
+4. Configure Neo4j to use it. Edit `neo4j/conf/neo4j.properties` and `neo4j/conf/neo4j-server.properties` files based on [this](https://dzone.com/articles/setting-neo4j-cluster-amazon) instructions. Make sure you modified `ha.server_id`, `ha.coordinators`, `ha.server` sections.
 5. Setup the 3 coordinators, one for each of the ec2 instances we’ll spin up by replacing the entries in **coord.cfg** to match the entries below:
 ```
 neo4j/conf/coord.cfg:
@@ -60,6 +63,7 @@ After you get on the Neo4j web adminstration, you will see the similar view as f
 And [this link](https://www.youtube.com/watch?v=bqvDSioHYq8) can give you a basic idea about how to take use of this webadmin.
 
 There are four sections that might be useful:
+
 1. Dashboard:
 You can get overall information such as how many nodes, properties and relationships of your db.
 To the right are charts that show the total number of primitive entities in the database over time. You can select the timespan to show with the links in the top right corner of the chart. To get specific info of some point in any chart, simply hover the mouse over the chart line.
