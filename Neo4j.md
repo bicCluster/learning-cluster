@@ -98,4 +98,4 @@ This interface lets you list, create and remove indexes from your database.
 Note that index creation here is provided for testing purposes, and is only capable of creating default indexes. To create indexes with more complex configurations, please use your Neo4j REST client of choice.
 Note: You can query your indexes through the data browser, see "syntax help" below the search bar there.
 
-For more information about Neo4j, you can refer to [link1](http://neo4j.com/), [link2](https://www.youtube.com/watch?v=UJ81zWBMguc&list=PLAWPhrZnH759YHRieMBzsQRvr56JcYx5l), [link3](https://www.youtube.com/watch?v=tyNWT85Z0mc).
+You could refer to [link1](http://neo4j.com/), [link2](https://www.youtube.com/watch?v=UJ81zWBMguc&list=PLAWPhrZnH759YHRieMBzsQRvr56JcYx5l), [link3](https://www.youtube.com/watch?v=tyNWT85Z0mc) for more information about Neo4j.
