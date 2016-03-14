@@ -5,22 +5,22 @@ You need to go through most of the following steps on four machines, we will tak
 
 ### Steps
 
-1. Login to the losalamos server and then update and install java:
+- Login to the losalamos server and then update and install java:
 ```
 sudo apt-get update
 install java
 ```
-2. Download and install Neo4j Enterprise edition and rename the directory to "neo4j".
+- Download and install Neo4j Enterprise edition and rename the directory to "neo4j".
 ```
 wget http://dist.neo4j.org/neo4j-enterprise-1.8-unix.tar.gz
 tar -xvzf neo4j-enterprise-1.8-unix.tar.gz
 ```
-3. Setting the file limits to 90000 for the ubuntu user.
+- Setting the file limits to 90000 for the ubuntu user.
 ```
 ulimit -n 90000
 ```
-4. Configure Neo4j to use it. Edit `neo4j/conf/neo4j.properties` and `neo4j/conf/neo4j-server.properties` files based on [this](https://dzone.com/articles/setting-neo4j-cluster-amazon) instructions. Make sure you modified `ha.server_id`, `ha.coordinators`, `ha.server` sections.
-5. Setup the 3 coordinators, one for each of the ec2 instances we’ll spin up by replacing the entries in **coord.cfg** to match the entries below:
+- Configure Neo4j to use it. Edit `neo4j/conf/neo4j.properties` and `neo4j/conf/neo4j-server.properties` files based on [this](https://dzone.com/articles/setting-neo4j-cluster-amazon) instructions. Make sure you modified `ha.server_id`, `ha.coordinators`, `ha.server` sections.
+- Setup the 3 coordinators, one for each of the ec2 instances we’ll spin up by replacing the entries in **coord.cfg** to match the entries below:
 ```
 neo4j/conf/coord.cfg:
 
@@ -29,7 +29,7 @@ server.2=ip address
 server.3=ip address
 server.4=ip address
 ```
-6. Set the Zookeeper coordinator ids on each instance:
+- Set the Zookeeper coordinator ids on each instance:
 ```
 On instance 1:
 echo '1' > myid   
@@ -38,11 +38,11 @@ echo '2' > myid
 On instance 3:
 echo '3' > myid
 ```
-7. Start the coordinators on all 3 instances:
+- Start the coordinators on all 3 instances:
 ```
 neo4j/bin/neo4j-coordinator start
 ```
-8. Finally start Neo4j on all 3 instances (using the no-wait option):
+- Finally start Neo4j on all 3 instances (using the no-wait option):
 ```
 neo4j/bin/neo4j start-no-wait
 ```
@@ -51,7 +51,7 @@ It will shows:
 Starting Neo4j Server...WARNING: not changing user
 process [2213]...Started the server in the background, returning...
 ```
-9. Now, you can check the following page and make use of Neo4j!
+- Now, you can check the following page and make use of Neo4j!
 ```
 http://ip-address:port
 ```
