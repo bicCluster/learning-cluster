@@ -1,3 +1,5 @@
+Neo4J is a graph database, a database aimed at storing and querying graphs rather than tables. Each node represents an entity (a person, place, thing, category or other piece of data), and each relationship represents how two nodes are associated. Unlike other databases, relationships take first priority in graph databases. This means your application doesn’t have to infer data connections using things like foreign keys or out-of-band processing, such as MapReduce.
+
 # Instructions for installing Neo4j
 While installing Neo4j, you might make use of [this](http://neo4j.com/docs/stable/ha-setup-tutorial.html) and [this](https://dzone.com/articles/setting-neo4j-cluster-amazon) instructions.
 
@@ -96,4 +98,4 @@ This interface lets you list, create and remove indexes from your database.
 Note that index creation here is provided for testing purposes, and is only capable of creating default indexes. To create indexes with more complex configurations, please use your Neo4j REST client of choice.
 Note: You can query your indexes through the data browser, see "syntax help" below the search bar there.
 
-For more information, you can refer to [link1](https://www.youtube.com/watch?v=UJ81zWBMguc&list=PLAWPhrZnH759YHRieMBzsQRvr56JcYx5l), [link2](https://www.youtube.com/watch?v=tyNWT85Z0mc).
+For more information about Neo4j, you can refer to [link1](http://neo4j.com/), [link2](https://www.youtube.com/watch?v=UJ81zWBMguc&list=PLAWPhrZnH759YHRieMBzsQRvr56JcYx5l), [link3](https://www.youtube.com/watch?v=tyNWT85Z0mc).
