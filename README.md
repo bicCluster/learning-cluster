@@ -149,18 +149,20 @@ You may want to confiture the iptables to block some incoming traffic and allow 
 
 Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
 
+For Setup, configure and deploy parts, you may also refer to [This](http://blog.phaisarn.com/node/1391) and [This](https://hadoopjournal.wordpress.com/2015/08/09/hortonworks-hadoop-installation-using-apache-ambari-on-centos6/).
+
 ### Tips
- 
-* Select default setting when installing Ambari Server.
-* If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
+* Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 * You need to set up password-less SSH during the process:
-	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
+	- The goal is that you can ssh from any one of the four machines to the root of other three without typing in password manually.
+	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help (However, you should be careful, you still need to use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly).
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
-	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
-	- Make sure the password-less SSH works in both directions: scp the private and public key to the .ssh folder of four machine and modify authorized_key file.
+	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file.
+	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
+	
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
 	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference.
@@ -178,6 +180,8 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
 	- Restart the service before runing Demo
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
+* Select default setting when installing Ambari Server.
+* If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
 * Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 * If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
