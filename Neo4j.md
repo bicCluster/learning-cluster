@@ -64,32 +64,34 @@ And [this link](https://www.youtube.com/watch?v=bqvDSioHYq8) can give you a basi
 
 There are four sections that might be useful:
 
-1. Dashboard:
+- Dashboard:
 You can get overall information such as how many nodes, properties and relationships of your db.
 To the right are charts that show the total number of primitive entities in the database over time. You can select the timespan to show with the links in the top right corner of the chart. To get specific info of some point in any chart, simply hover the mouse over the chart line.
 
-2. Data browser:
+- Data browser:
 In this section, you can create nodes, relationships using the top right bottoms, and set properties on each node, and you can use Cypher query language([this](http://neo4j.com/docs/1.8/cypher-query-lang.html) can help you with Cypher syntax) for working with your data, and click top right bottom "switch view mode" to view your data in graph view mode.
 
-3. Console:
+- Console:
 The Neo4j Shell, allows you to use the Cypher query language for working with your graph, as well as other powerful shell features.
 After you create nodes in your db, you could test this part with some basic Cypher queries:
 ```
-3.1 Get node with id 0
+-- Get node with id 0
 START a = node(0)
 RETURN a;
-3.2 Get all nodes connects to node with id 0
+
+-- Get all nodes connects to node with id 0
 START a = node(0)
 MATCH a-->b
 RETURN b;
-3.3 Get all nodes connected to node with id 0, and the relationships
+
+-- Get all nodes connected to node with id 0, and the relationships
 START a = node(0)
 MATCH a-[r]->b
 RETURN r, b;
 ```
 [Here](http://console.neo4j.org/) is an example of Neo4j console.
 
-4. Indexes:
+- Indexes:
 This interface lets you list, create and remove indexes from your database.
 Note that index creation here is provided for testing purposes, and is only capable of creating default indexes. To create indexes with more complex configurations, please use your Neo4j REST client of choice.
 Note: You can query your indexes through the data browser, see "syntax help" below the search bar there.
