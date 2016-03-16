@@ -219,6 +219,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - Keep in mind that `losalamos` should be one of the clients;
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
+- **Do not** reboot losalamos after installing the OS 
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
