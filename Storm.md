@@ -1,7 +1,7 @@
 # Objective
 Install Storm service using Ambari install wizard
 
-# Pitfall
+# Pitfalls
 * Choose only basic services in the first basic Ambari Installation process, add storm service later.
 * There are 2 ways to install Storm (1 using Ambari (2 non-Ambari. Choose the first one.
 
@@ -21,3 +21,4 @@ Refer to Official Document [here](http://docs.hortonworks.com/HDPDocuments/HDP2/
 * During the Customize Services step, configure 2 propertities. read [here]( http://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.2.9/bk_storm-user-guide/content/storm-install-config.html)<br /> 
 (1 supervisor.childopts property<br />
 (2 worker.childopts property<br />
+
