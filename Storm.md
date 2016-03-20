@@ -16,9 +16,13 @@ Refer to Official Document [here](http://docs.hortonworks.com/HDPDocuments/HDP2/
 
 * Choose Storm in Choosing services step
 
-* Choose default configuration in the Assign Masters step and Assign Slaves and Clients step
+* Assign losalamos to run Storm’s Nimbus daemon as well as the Storm UI server and the other three hosts to run Supervisor daemons.  [this](http://www.michael-noll.com/tutorials/running-multi-node-storm-cluster/)
 
 * During the Customize Services step, configure 2 propertities. read [here]( http://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.2.9/bk_storm-user-guide/content/storm-install-config.html)<br /> 
 (1 supervisor.childopts property<br />
 (2 worker.childopts property<br />
+
+# Test
+
+* Refer [this tutorial](http://zh.hortonworks.com/hadoop-tutorial/processing-streaming-data-near-real-time-apache-storm/) to run a Storm topology. Check the Storm Log files to see if your topology was executely without any error. 
 
