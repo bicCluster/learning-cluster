@@ -109,7 +109,7 @@ Notice: during the entire process (even after you finish this part), you’d bet
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
 3. Configure `eth0` in the file `/etc/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. Since this file is read-only, you may want to edit it with sudo.
-4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`.
+4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. （static IP is easier and safer）
 
 * Using DHCP
 
@@ -153,9 +153,18 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 
 ### Tips
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
+* It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
+* ##Do not## skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
+1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
+2. no need do 1.4.2: there is default account
+3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/) and [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/)
+4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
+5. no need for 1.4.5: detailed iptable setting guide has been given above.
+
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 * You need to set up password-less SSH during the process:
+	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
 	- The goal is that you can ssh from any one of the four machines to the root of other three without typing in password manually.
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help (However, be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
