@@ -4,6 +4,7 @@ Install Storm service using Ambari install wizard
 # Pitfalls
 * Choose only basic services in the first basic Ambari Installation process, add storm service later.
 * There are 2 ways to install Storm (1 using Ambari (2 non-Ambari. Choose the first one.
+* Do not assign losalamos as supervisor. Details are in the following step by step installation part.
 
 # What's Storm
 Apache Storm is a free and open source distributed realtime computation system. Storm makes it easy to reliably process unbounded streams of data, doing for realtime processing what Hadoop did for batch processing. Storm is simple, can be used with any programming language, and is a lot of fun to use!<br /> 
