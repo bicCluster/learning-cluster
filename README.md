@@ -98,6 +98,10 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 4. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
 
+5. You need to choose unmount the disk partition before installation step. Choose the guided use entire disk, if there is multiple partition selections, just take the default one.
+
+6. Sometimes the system may get stuck when reboots after completing installation, in such rare cases, just press the reboot button on the back of the server for more than 10 seconds and restart the system.
+
 Notice: the openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
 
 ## <a name="install-subnet">Establish Subnet</a>
@@ -110,6 +114,7 @@ Notice: during the entire process (even after you finish this part), you’d bet
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
 3. Configure `eth0` in the file `/etc/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. Since this file is read-only, you may want to edit it with sudo.
 4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. （static IP is easier and safer）
+5. To prevent warning for Ambari part, you can set the hosts as 'ip_address domain_name alias', each node should maintain the same copies of hosts configuration file.
 
 * Using DHCP
 
@@ -144,6 +149,7 @@ You may want to confiture the iptables to block some incoming traffic and allow 
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
 3. Don't overthink it. Just type in the commands, they are not script.
 4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
+5. When setting the iptable protection, make sure you don't block the SSH.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -160,12 +166,16 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/) and [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/)
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
+6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
+7. You can set ulimit at /etc/security/limits.conf, make sure you change the ulimit of the ACCOUNT YOU USE(e.g root) to install Ambari. But you may need to reboot the system to make it funcational, so it may be better to set this right after you install the OS and then reboot the system.
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 * You need to set up password-less SSH during the process:
 	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
 	- The goal is that you can ssh from any one of the four machines to the root of other three without typing in password manually.
+	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
+	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help (However, be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
@@ -195,7 +205,8 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 * If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
 [this](https://access.redhat.com/solutions/46111).
-* Make sure that you have Python 2.6 installed, sometimes it gives out an error if you continue with Python 2.7. You could use the [link](http://askubuntu.com/questions/125342/how-can-i-install-python-2-6-on-12-04) or download it from Python website.
+* For installing Ambari (except for logging into node for debug), you DON'T need to install python2.6, Ambari is compatible with python2.6 or later version.
+* If you decide to install python yourself, actually for anything, DO NOT use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
@@ -229,6 +240,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
 - **Do not** reboot losalamos after installing the OS 
+- Edit this instruction file with carefulness, wrong tips can lead to a huge waste of time of other people.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
