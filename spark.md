@@ -5,10 +5,10 @@
 * It better for you to follow the official installation Instructions: [here](http://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.3.4/bk_spark-guide/content/ch_installing-spark.html)
 
 * Steps
-1. To add Service Spark through Ambari web console: go to 'Services' > 'Actions' > 'Add Service' > 'select spark'
-2. Choose the Spark history Server, you can use default selection.
+   1. To add Service Spark through Ambari web console: go to 'Services' > 'Actions' > 'Add Service' > 'select spark'
+   2. Choose the Spark history Server, you can use default selection.
    Choose the number of clients. you may choose multiple clients to run spark.
-3. The Spark will be installed automatically by Ambari.
+   3. The Spark will be installed automatically by Ambari.
 
 ## Test the Spark
 * There are multiple testing materials you can refer to:
