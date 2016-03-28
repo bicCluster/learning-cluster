@@ -245,6 +245,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
 
+##(Two groups have indicated that the following 5 steps may cause components of ambari not being able to install and the ambari to fail rebooting, so be careful if you need to reconfigure the server)
 1. Stop all services from Ambari first, both in losalamos and 3 slave machines. On slave machines, `sudo ambari-client stop`. On losalamos, do `sudo ambari-client stop` and `sudo ambari-server stop`.
 2. Clean installed services on all four machines
 `python /usr/lib/python2.6/site-packages/ambari_agent/HostCleanup.py`
