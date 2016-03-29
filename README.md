@@ -213,6 +213,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 [this](https://access.redhat.com/solutions/46111).
 * For installing Ambari (except for logging into node for debug), you DON'T need to install python2.6, Ambari is compatible with python2.6 or later version.
 * If you decide to install python yourself, actually for anything, DO NOT use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
+* SName Node and Name node should be on different machines. Data Node and Name Node should be on different machines. Name node(Not SName Node) is the primary Name Node.
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
