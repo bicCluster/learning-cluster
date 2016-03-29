@@ -25,3 +25,4 @@
 * To run spark on cluster, you need first put input file(not the program) in local file system and then upload to hdfs.
 * Make sure the output folder doesn't exit on hdfs before running the spark.
 * For the convenience of testing, you can write a bash script to automatically upload file to hdfs, run spark, download output from hdfs.
+* If you choose the second method, after you type './bin/spark-shell --master yarn-client --driver-memory 512m --executor-memory 512m', you may meet warnings about 'import SQL', just ignore it.
