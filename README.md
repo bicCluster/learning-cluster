@@ -94,7 +94,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 2. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network autoconfiguration failed", just ignore and continue.
 
-3. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose not to update the server automatically when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
+3. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose `not to update the server automatically` when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
 
 4. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
 
@@ -115,7 +115,7 @@ Notice: during the entire process (even after you finish this part), you’d bet
 3. Configure `eth0` in the file `/etc/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. Since this file is read-only, you may want to edit it with sudo.
 4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. （static IP is easier and safer）.
 5. To prevent warning for Ambari part, you can set the hosts as 'ip_address domain_name alias', each node should maintain the same copies of hosts configuration file.
-6. If you want to set the hosts as 'ip_address domain_name alias'. In the file /etc/hosts, you should list all the hosts below the localhost on each machine.  It should be  10.0.0.2 losalamos.pc.cs.cmu.edu losalamos, 10.0.0.3 alpha.pc.cs.cmu.edu alpha 10.0.0.4 beta.pc.cs.cmu.edu beta and 10.0.0.5 gamma.pc.cs.cmu.edu gamma.(Each host one line.).
+6. If you want to set the hosts as 'ip_address domain_name alias'. In the file /etc/hosts, you should list `all the hosts` below the localhost on each machine.  It should be  10.0.0.2 losalamos.pc.cs.cmu.edu losalamos, 10.0.0.3 alpha.pc.cs.cmu.edu alpha 10.0.0.4 beta.pc.cs.cmu.edu beta and 10.0.0.5 gamma.pc.cs.cmu.edu gamma.(Each host one line.). Otherwise you would receive warning `Transparent Huge Pages` as you can see below when deploying the Ambari Server.
 7. Remember to use `sudo vim /etc/hosts` or `sudo vim /etc/network/interfaces` if you want to modify these files.
 
 
@@ -144,6 +144,7 @@ Notice: during the entire process (even after you finish this part), you’d bet
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
+
 If you block or drop some important ports (i.e., 22, 8080), you might lose the SSH connection or HTTP connection.
 
 ### Tips
@@ -153,9 +154,9 @@ If you block or drop some important ports (i.e., 22, 8080), you might lose the S
 `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
 3. Don't overthink it. Just type in the commands, they are not script.
 4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
-5. When setting the iptable protection, make sure you don't block the SSH.
+5. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the principle figure shown above.
 6. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
-
+7. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -185,7 +186,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help (However, be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
-	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file.
+	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
 	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line.
