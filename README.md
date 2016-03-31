@@ -94,7 +94,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 2. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network autoconfiguration failed", just ignore and continue.
 
-3. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops.
+3. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose not to update the server automatically when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
 
 4. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
 
@@ -113,9 +113,10 @@ Notice: during the entire process (even after you finish this part), you’d bet
 1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
 2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
 3. Configure `eth0` in the file `/etc/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. Since this file is read-only, you may want to edit it with sudo.
-4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. （static IP is easier and safer）
+4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. （static IP is easier and safer）.
 5. To prevent warning for Ambari part, you can set the hosts as 'ip_address domain_name alias', each node should maintain the same copies of hosts configuration file.
 6. If you want to set the hosts as 'ip_address domain_name alias'. In the file /etc/hosts, you should list all the hosts below the localhost on each machine.  It should be  10.0.0.2 losalamos.pc.cs.cmu.edu losalamos, 10.0.0.3 alpha.pc.cs.cmu.edu alpha 10.0.0.4 beta.pc.cs.cmu.edu beta and 10.0.0.5 gamma.pc.cs.cmu.edu gamma.(Each host one line.).
+7. Remember to use `sudo vim /etc/hosts` or `sudo vim /etc/network/interfaces` if you want to modify these files.
 
 
 * Using DHCP
@@ -128,7 +129,7 @@ Notice: during the entire process (even after you finish this part), you’d bet
 
 * Using staic IP
 
-> * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `/etc/network/interfaces`
+> * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip, i.e., 10.0.0.3 for alpha),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `/etc/network/interfaces`
 
 5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 6. **DO NOT** reboot losalamos after configuration. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Not eth1 for losalamos! And if it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
@@ -142,7 +143,8 @@ Notice: during the entire process (even after you finish this part), you’d bet
 
 For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
-You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 	
+You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
+If you block or drop some important ports (i.e., 22, 8080), you might lose the SSH connection or HTTP connection.
 
 ### Tips
 
@@ -152,7 +154,7 @@ You may want to confiture the iptables to block some incoming traffic and allow 
 3. Don't overthink it. Just type in the commands, they are not script.
 4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
 5. When setting the iptable protection, make sure you don't block the SSH.
-6. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the ssh.
+6. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
@@ -187,6 +189,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line.
+	- Remember to set id_rsa.pub as authroized_keys in the `losamalos` if you want other slave machines to login using `ssh losamalos`.
 	
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
@@ -197,9 +200,10 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 * You need to install both `ambari-server` and `ambari-agent` on `losamalos`, and you only need to install `ambari-agent` on three innet machine,
 * But if everything goes smoothly, you only have to manully install `ambari-server` on `losalamos`, and everything else can be doen through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
 * While installing `ambari-server` on `losamalos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
+* Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
 * Your java directory should be under `/usr/jdk64/`. Carefully set it to your configuration file.
 * While going through the Ambari Install Wizard, there are several parts you should watch out: 
-	- Make sure password-less ssh is correctly set up, which will let you ssh from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
+	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
 	- When assinging master, go through the `Grading Criteria` in `Requirements` section carefully.
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
@@ -238,6 +242,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - Remember that in MapReduce 2.0, you should use the command `yarn` but not `hadoop`.
 - If you have trouble running your wordcount program, you may need to install the Java Jre before. You can choose the default one. 
 - If you have already run the wordcount program successfully and want to run it again, make sure to remove two things. The first one is the output folder. Using hdfs 'dfs -rm -r StartsWithCount/output'. And anther one is the previous version's result. Or you may meet problems say 'File exits'.
+- If you meet some problems when you try to compile the java files, you might meet some errors. You might need to install or import some libraries. You do not need to reinstall the cluster.
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
@@ -283,3 +288,4 @@ All your are doing is going either up or down the network model layers.
 * `ping`: Ping your computer (by address, not host name) to determine that TCP/IP is functioning. You can also use option `-c` to determine how many packets you'are sending.
 * `ifconfig`: Tell you everything about the network interface
 * `iptables -L -v` Check current valid rule in iptable
+* `scp` Please refer to [Here](http://www.hypexr.org/linux_scp_help.php)
