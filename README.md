@@ -4,6 +4,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 * [Knowledge Background](#knowledge)
 * [Notes About Hardware](#hd)
 * [Steps to Follow](#step)
+    - [Milestone Checklist](#milestone-checklist)
     - [Install Ubuntu](#install-ubuntu)
     - [Establsh Subnet](#install-subnet)
     - [Iptables](#iptables)
@@ -72,6 +73,15 @@ REJECT     all  --  any    any     anywhere             anywhere             rej
 
 <hr>
 
+## <a name="milestone-checklist">Milestone Checklist</a>
+
+1. System installation of `losalamos`. When you finish, you can log in with the username and password when you set up during the installation. Also, you can input command line `ping google.com` to test whether `losalamos` have the right access to Internet.
+
+2. System installation of three slave machines, (which is `alpha`,`beta` and `gamma`, according to your choice of naming). When you finish, you can log in with the username and password when you set up during the installation.
+
+3. Configuration of `/etc/network/interfaces` and `/etc/hosts`. When you finish, you can ping other machines using the hostname or ip.
+
+4. Configuration of `iptables`. When you finish, you can input `ping google.com` on the three slave machines to test whether they have access to Internet.
 
 # <a name="step">Steps to Follow</a>
 
@@ -87,36 +97,75 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 1. burn by command `dd` [[ref]](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx)
 2. burn by UNetbootin [[ref]](http://unetbootin.github.io/) Please update if there are methods that work. A convenient method is to install Ubuntu from CD (the CD is already provided, you can find it near the machines).
 
+###Bullet points when installation 
+1. Detect keyboard layout? Select `No`
+2. Encrypt your home directory? Select `No`
+3. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
+4. Write changes to disks? Select `Yes`
+5. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`.
+6. HTTP proxy information? `Continue` with blank
+7. How do you want to manage upgrades on this system? `Install security updates automatically`
+8. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
+9. Install the GRUB boot loader to the master boot record? Choose `YES`.
+
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
 ### Tips
 1. In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
 
-2. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network autoconfiguration failed", just ignore and continue.
+2. Sometimes the system may get stuck when reboots after completing installation, in such rare cases, just press the reboot button on the back of the server for more than 10 seconds and restart the system.
 
-3. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose `not to update the server automatically` when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
+3. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network autoconfiguration failed", just ignore and continue.
 
-4. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
+4. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose `not to update the server automatically` when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
 
-5. You need to choose unmount the disk partition before installation step. Choose the guided use entire disk, if there is multiple partition selections, just take the default one.
+5  The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
 
-6. Sometimes the system may get stuck when reboots after completing installation, in such rare cases, just press the reboot button on the back of the server for more than 10 seconds and restart the system.
+6. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
 
-Notice: the openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
+7. You need to choose unmount the disk partition before installation step. Choose the guided use entire disk, if there is multiple partition selections, just take the default one. 
+
+
 
 ## <a name="install-subnet">Establish Subnet</a>
 
 Notice: during the entire process (even after you finish this part), you’d better not reboot any of the four machines after you have done with following establish subnet steps, otherwise you may lose your network connection and need to install the OS once again (Welcome for the notes if you could solve this problems without reinstalling OS).
+There are two ways, which is DHCP and static IP, to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. Static IP is easier and safer, so the following step instruction is based on static IP method. If you want to use DHCP, please refer to the instruction below the `Steps` part.
+### Steps
+
+1. Connect servers physically, through the switch and network adapter ports on each machine. 
+2. Start from the `losamalos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be     
+    `auto eth0
+    iface eth0 inet static
+    address 10.0.0.2
+    netmask 255.255.255.0
+    gateway 10.0.0.2
+    broadcast 10.0.0.255`
+You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
+Attention: comment the keyword `loopback` and `dhcp` if you use static ip method. `loopback` and `dhcp` are the default keywords which have already been in the files.
+3. (Recommended)Still in the configuration of `losamalos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
+    `localhost 127.0.0.1
+     10.0.0.2 losalamos.pc.cs.cmu.edu losalamos
+     10.0.0.3 alpha.pc.cs.cmu.edu alpha
+     10.0.0.4 beta.pc.cs.cmu.edu beta
+     10.0.0.5 gamma.pc.cs.cmu.edu gamma`
+This [page](http://linux.die.net/man/5/hosts) can give you more info.
+4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
+5. Modified the above two files similarly in the three slave machines. There are some minor modifications needed to make. The following is an example when configuring `alpha`. Other information refer to the image above.
+When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the command line `sudo vim /etc/network/interfaces`. The content would be     
+    `auto eth1
+    iface eth1 inet static
+    address 10.0.0.3
+    netmask 255.255.255.0
+    gateway 10.0.0.2
+    broadcast 10.0.0.255`
+If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
+6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
+7. You should be able to ping each other now using IP.
 
 ### Tips
-
-1. Connect servers physically, through the switch and network adapter ports on each machine. Usually this step has already been done.
-2. Start from the `losamalos` Up the `eth0` network of `losalamos`. using command `sudo ifconfig eth0 up`
-3. Configure `eth0` in the file `/etc/network/interfaces` with `static ip = 10.0.0.2`, `netmask 255.255.255.0`, `gateway 10.0.0.2`, and `broadcast 10.0.0.255`. You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. Since this file is read-only, you may want to edit it with sudo.
-4. There are two ways to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. （static IP is easier and safer）.
-5. To prevent warning for Ambari part, you can set the hosts as 'ip_address domain_name alias', each node should maintain the same copies of hosts configuration file.
-6. If you want to set the hosts as 'ip_address domain_name alias'. In the file /etc/hosts, you should list `all the hosts` below the localhost on each machine.  It should be  10.0.0.2 losalamos.pc.cs.cmu.edu losalamos, 10.0.0.3 alpha.pc.cs.cmu.edu alpha 10.0.0.4 beta.pc.cs.cmu.edu beta and 10.0.0.5 gamma.pc.cs.cmu.edu gamma.(Each host one line.). Otherwise you would receive warning `Transparent Huge Pages` as you can see below when deploying the Ambari Server.
-7. Remember to use `sudo vim /etc/hosts` or `sudo vim /etc/network/interfaces` if you want to modify these files.
+1. To prevent warning for Ambari part, you can set the hosts as 'ip_address domain_name alias', each node should maintain the same copies of hosts configuration file.
+2. If you want to set the hosts as 'ip_address domain_name alias'. In the file `/etc/hosts`, you should list `all the hosts` below the localhost on each machine. Otherwise you would receive warning `Transparent Huge Pages` as you can see below when deploying the Ambari Server.
 
 
 * Using DHCP
@@ -127,21 +176,22 @@ Notice: during the entire process (even after you finish this part), you’d bet
 
 > * Switch to innet machines, up the `eth1`, and set up each `eth1` to `dhcp`. You can check this [page](http://inside.mines.edu/CCIT-NET-SS-Configuring-a-Dynamic-IP-Address-Debian-Linux) to help.
 
-* Using staic IP
-
-> * No need to set up DHCP server on `losalamos`. Go straight to innet machines and set up the static IP to the three innet machine as the image above. This [page](https://help.ubuntu.com/14.04/serverguide/network-configuration.html) can help you to set up the static ip, you need to set the `address`(staic ip, i.e., 10.0.0.3 for alpha),`netmask`(255.255.255.0),`gateway`(the static IP of losamalos) and`dns-nameservers`(128.2.184.224) in the file `/etc/network/interfaces`
-
-5. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
-6. **DO NOT** reboot losalamos after configuration. Simply using `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Not eth1 for losalamos! And if it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
-7. You should be able to ping each other now using IP.
-8. Edit `/etc/hosts` files on four machines, telling them the connections between IP and domain and hostname. This [page](http://linux.die.net/man/5/hosts) can guide you how to set up. In losalamos `/etc/hosts`, remember to change the default ip address of losalamos to 10.0.0.2.
-9. You should be able to ping each other now using domain or hostname.
 
 ## <a name="iptables">Iptables</a>
 
 ![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
 
-For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them. [This page](http://www.revsys.com/writings/quicktips/nat.html) is enough as a HOWTO wiki. If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/). After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
+For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them.  
+
+### Steps
+1. Configure `losalamos`. Input the following command line,
+ `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`
+ `sudo iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE`
+ `sudo iptables -A FORWARD -i eth1 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT`
+ `sudo iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT`
+If the above command lines don't work in your case, please refer to this [HOWTO WIKI](http://www.revsys.com/writings/quicktips/nat.html). If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/).
+Attention: `HOWTO WIKI` is not totally same as our case, according to the image above. `eth0` and `eth1` are supposed to be swapped in our case, compared with the examples in the wiki. Don't overthink the command lines in HOWTO WIKI. Just type in the commands, they are not script.
+After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
 
@@ -149,14 +199,10 @@ If you block or drop some important ports (i.e., 22, 8080), you might lose the S
 
 ### Tips
 
-1. Read the instructions **carefully** and find out **which is incoming network port and which is outgoing**. **Do not** use the command line exactly the same as in [this](http://www.revsys.com/writings/quicktips/nat.html). You should modify the eth0 or eth1 based on the picture above. First you should postrouting eth1, then you should forward eth1 to eth0 and last you should forward eth0 to eht1.
-2. When executing `echo 1 > /proc/sys/net/ipv4/ip_forward` as instructed in the HOWTO wiki page, if get a "permission denied" alert，please use this command: 
-`sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`.
-3. Don't overthink it. Just type in the commands, they are not script.
-4. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
-5. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the principle figure shown above.
-6. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
-7. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
+1. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
+2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the principle figure shown above.
+3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
+4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
