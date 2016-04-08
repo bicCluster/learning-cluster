@@ -134,31 +134,33 @@ There are two ways, which is DHCP and static IP, to setup connection between `lo
 ### Steps
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. 
-2. Start from the `losamalos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be     
-    `auto eth0
-    iface eth0 inet static
-    address 10.0.0.2
-    netmask 255.255.255.0
-    gateway 10.0.0.2
-    broadcast 10.0.0.255`
+2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be     
+    `auto eth0`
+    `iface eth0 inet static`
+    `address 10.0.0.2`
+    `netmask 255.255.255.0`
+    `gateway 10.0.0.2`
+    `broadcast 10.0.0.255`
+    `dns-nameservers 8.8.8.8 8.8.4.4`
 You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
 Attention: comment the keyword `loopback` and `dhcp` if you use static ip method. `loopback` and `dhcp` are the default keywords which have already been in the files.
-3. (Recommended)Still in the configuration of `losamalos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
-    `localhost 127.0.0.1
-     10.0.0.2 losalamos.pc.cs.cmu.edu losalamos
-     10.0.0.3 alpha.pc.cs.cmu.edu alpha
-     10.0.0.4 beta.pc.cs.cmu.edu beta
-     10.0.0.5 gamma.pc.cs.cmu.edu gamma`
+3. (Recommended)Still in the configuration of `losalamos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
+     `localhost 127.0.0.1`
+     `10.0.0.2 losalamos.pc.cs.cmu.edu losalamos`
+     `10.0.0.3 alpha.pc.cs.cmu.edu alpha`
+     `10.0.0.4 beta.pc.cs.cmu.edu beta`
+     `10.0.0.5 gamma.pc.cs.cmu.edu gamma`
 This [page](http://linux.die.net/man/5/hosts) can give you more info.
 4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
 5. Modified the above two files similarly in the three slave machines. There are some minor modifications needed to make. The following is an example when configuring `alpha`. Other information refer to the image above.
 When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the command line `sudo vim /etc/network/interfaces`. The content would be     
-    `auto eth1
-    iface eth1 inet static
-    address 10.0.0.3
-    netmask 255.255.255.0
-    gateway 10.0.0.2
-    broadcast 10.0.0.255`
+    `auto eth1`
+    `iface eth1 inet static`
+    `address 10.0.0.3`
+    `netmask 255.255.255.0`
+    `gateway 10.0.0.2`
+    `broadcast 10.0.0.255`
+    `dns-nameservers 8.8.8.8 8.8.4.4`
 If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
 6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 7. You should be able to ping each other now using IP.
@@ -199,7 +201,7 @@ If you block or drop some important ports (i.e., 22, 8080), you might lose the S
 
 ### Tips
 
-1. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files; or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
+1. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files;(In order to resolve DNS host name you should add dns-nameservers line when you configure etc/network/interfaces on four machines as indicated above, otherwise the inner machine can only ping external IP address.) or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
 2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the principle figure shown above.
 3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
