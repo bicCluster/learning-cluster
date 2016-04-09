@@ -137,11 +137,11 @@ There are two ways, which is DHCP and static IP, to setup connection between `lo
 2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be 
 ```
     auto eth0
-    iface eth0 inet static`
-      address 10.0.0.2`
-      netmask 255.255.255.0`
-      gateway 10.0.0.2`
-      broadcast 10.0.0.255`
+    iface eth0 inet static
+      address 10.0.0.2
+      netmask 255.255.255.0
+      gateway 10.0.0.2
+      broadcast 10.0.0.255
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
 You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
@@ -161,10 +161,10 @@ When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the comma
 ```
     auto eth1
     iface eth1 inet static
-      address 10.0.0.3`
+      address 10.0.0.3
       netmask 255.255.255.0
-      gateway 10.0.0.2`
-      broadcast 10.0.0.255`
+      gateway 10.0.0.2
+      broadcast 10.0.0.255
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
 If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
