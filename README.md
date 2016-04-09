@@ -134,14 +134,16 @@ There are two ways, which is DHCP and static IP, to setup connection between `lo
 ### Steps
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. 
-2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be     
-    `auto eth0`
-    `iface eth0 inet static`
-    `address 10.0.0.2`
-    `netmask 255.255.255.0`
-    `gateway 10.0.0.2`
-    `broadcast 10.0.0.255`
-    `dns-nameservers 8.8.8.8 8.8.4.4`
+2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be 
+```
+    auto eth0
+    iface eth0 inet static`
+      address 10.0.0.2`
+      netmask 255.255.255.0`
+      gateway 10.0.0.2`
+      broadcast 10.0.0.255`
+      dns-nameservers 8.8.8.8 8.8.4.4
+```
 You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
 Attention: comment the keyword `loopback` and `dhcp` if you use static ip method. `loopback` and `dhcp` are the default keywords which have already been in the files.
 3. (Recommended)Still in the configuration of `losalamos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
@@ -159,11 +161,11 @@ When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the comma
 ```
     auto eth1
     iface eth1 inet static
-    address 10.0.0.3`
-    netmask 255.255.255.0
-    gateway 10.0.0.2`
-    broadcast 10.0.0.255`
-    dns-nameservers 8.8.8.8 8.8.4.4
+      address 10.0.0.3`
+      netmask 255.255.255.0
+      gateway 10.0.0.2`
+      broadcast 10.0.0.255`
+      dns-nameservers 8.8.8.8 8.8.4.4
 ```
 If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
 6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
