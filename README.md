@@ -277,8 +277,8 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 * If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
 [this](https://access.redhat.com/solutions/46111). You may first try the following commands to disable THP and see if the problem can be fixed:
 ```
-# echo never > /sys/kernel/mm/redhat_transparent_hugepage/enabled
-# echo never > /sys/kernel/mm/redhat_transparent_hugepage/defrag
+# echo never > /sys/kernel/mm/transparent_hugepage/enabled
+# echo never > /sys/kernel/mm/transparent_hugepage/defrag
 ```
 * For installing Ambari (except for logging into node for debug), you DON'T need to install python2.6, Ambari is compatible with python2.6 or later version.
 * If you decide to install python yourself, actually for anything, DO NOT use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
