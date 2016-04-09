@@ -121,7 +121,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 5  The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
 
-6. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
+6. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
 
 7. You need to choose unmount the disk partition before installation step. Choose the guided use entire disk, if there is multiple partition selections, just take the default one. 
 
@@ -145,22 +145,26 @@ There are two ways, which is DHCP and static IP, to setup connection between `lo
 You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
 Attention: comment the keyword `loopback` and `dhcp` if you use static ip method. `loopback` and `dhcp` are the default keywords which have already been in the files.
 3. (Recommended)Still in the configuration of `losalamos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
-     `localhost 127.0.0.1`
-     `10.0.0.2 losalamos.pc.cs.cmu.edu losalamos`
-     `10.0.0.3 alpha.pc.cs.cmu.edu alpha`
-     `10.0.0.4 beta.pc.cs.cmu.edu beta`
-     `10.0.0.5 gamma.pc.cs.cmu.edu gamma`
+```
+     localhost 127.0.0.1
+     10.0.0.2 losalamos.pc.cs.cmu.edu losalamos
+     10.0.0.3 alpha.pc.cs.cmu.edu alpha
+     10.0.0.4 beta.pc.cs.cmu.edu beta
+     10.0.0.5 gamma.pc.cs.cmu.edu gamma
+```
 This [page](http://linux.die.net/man/5/hosts) can give you more info.
 4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
 5. Modified the above two files similarly in the three slave machines. There are some minor modifications needed to make. The following is an example when configuring `alpha`. Other information refer to the image above.
-When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the command line `sudo vim /etc/network/interfaces`. The content would be     
-    `auto eth1`
-    `iface eth1 inet static`
-    `address 10.0.0.3`
-    `netmask 255.255.255.0`
-    `gateway 10.0.0.2`
-    `broadcast 10.0.0.255`
-    `dns-nameservers 8.8.8.8 8.8.4.4`
+When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the command line `sudo vim /etc/network/interfaces`. The content would be
+```
+    auto eth1
+    iface eth1 inet static
+    address 10.0.0.3`
+    netmask 255.255.255.0
+    gateway 10.0.0.2`
+    broadcast 10.0.0.255`
+    dns-nameservers 8.8.8.8 8.8.4.4
+```
 If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
 6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 7. You should be able to ping each other now using IP.
@@ -205,6 +209,7 @@ If you block or drop some important ports (i.e., 22, 8080), you might lose the S
 2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the principle figure shown above.
 3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
+5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`. Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP(10.X.X.X).
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -215,10 +220,10 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 ### Tips
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
 * It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
-* ##Do not## skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
+* **Do not** skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
 1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
 2. no need do 1.4.2: there is default account
-3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/) and [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/)
+3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
 6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
@@ -226,12 +231,14 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
+
 * You need to set up password-less SSH during the process:
 	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
 	- The goal is that you can ssh from any one of the four machines to the root of other three without typing in password manually.
 	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
+	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
 	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
-	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://www.linuxproblem.org/art_9.html) and [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help (However, be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
+	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
 	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
@@ -252,8 +259,8 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
         - **Hostname conflict**. Look for errors in the log. If there is a hostname conflict (eg: expecting alpha.pc.cs.cmu.edu but got alpha), you can change the hostname by using the `hostname <name>` command.
         - Misconfiguration of the ambari agents. Remove the ambari installation and try again with a clean slate. (Not for losalamos)
 * While installing `ambari-server` on `losamalos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
+* Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
-* Your java directory should be under `/usr/jdk64/`. Carefully set it to your configuration file.
 * While going through the Ambari Install Wizard, there are several parts you should watch out: 
 	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
@@ -266,7 +273,11 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 * Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
 * If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
-[this](https://access.redhat.com/solutions/46111).
+[this](https://access.redhat.com/solutions/46111). You may first try the following commands to disable THP and see if the problem can be fixed:
+```
+# echo never > /sys/kernel/mm/redhat_transparent_hugepage/enabled
+# echo never > /sys/kernel/mm/redhat_transparent_hugepage/defrag
+```
 * For installing Ambari (except for logging into node for debug), you DON'T need to install python2.6, Ambari is compatible with python2.6 or later version.
 * If you decide to install python yourself, actually for anything, DO NOT use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
 * SName Node and Name node should be on different machines. Data Node and Name Node should be on different machines. Name node(Not SName Node) is the primary Name Node.
