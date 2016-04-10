@@ -65,6 +65,8 @@ For more hbase shell command, you may refer to [this](https://learnhbase.wordpre
 
 ## Test Example Code
 -You can use the example project provided [here](https://github.com/CodeMySky/hbase-hortonworks). To run your own implementation, replace the java files in hbase-hortonworks-master\src\main\java with your own.
+
 -First, replace the configuration file in `src/resources` by the setting download from "HBase -> "Service Actions" -> "Download Client Configuration" in Ambari. 
+
 -Then run:
 `compile.sh`
