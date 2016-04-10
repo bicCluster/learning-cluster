@@ -69,4 +69,4 @@ For more hbase shell command, you may refer to [this](https://learnhbase.wordpre
 -First, replace the configuration file in `src/resources` by the setting download from "HBase -> "Service Actions" -> "Download Client Configuration" in Ambari. 
 
 -Then run:
-`compile.sh`
+`sh compile.sh`
