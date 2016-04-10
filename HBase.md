@@ -59,3 +59,6 @@ scan 'table_name'
 For more hbase shell command, you may refer to [this](https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/)
 
 ## Test Example Code
+-We use the example code provided [here](https://github.com/CodeMySky/hbase-hortonworks).
+-First, replace the configuration file in `src/resources` by the setting download from "HBase -> "Service Actions" -> "Download Client Configuration" in Ambari. Then run:
+`compile.sh`
