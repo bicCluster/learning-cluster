@@ -6,6 +6,8 @@ HBase is a clolumn based NoSQL database. For more information, you can refer to 
 
 # Install
 You can choose to install HBase during the Ambari set-up process.
+![alt text](https://github.com/CleoJiang/CCAssignment/blob/master/WeChat_1458152481.jpeg)
+<!-- Image courtesy of Group 14, from Storm.md -->
 
 # Test
 ## Test HBase Shell
@@ -59,6 +61,7 @@ scan 'table_name'
 For more hbase shell command, you may refer to [this](https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/)
 
 ## Test Example Code
--We use the example code provided [here](https://github.com/CodeMySky/hbase-hortonworks).
--First, replace the configuration file in `src/resources` by the setting download from "HBase -> "Service Actions" -> "Download Client Configuration" in Ambari. Then run:
+-You can use the example project provided [here](https://github.com/CodeMySky/hbase-hortonworks). To run your own implementation, replace the java files in hbase-hortonworks-master\src\main\java with your own.
+-First, replace the configuration file in `src/resources` by the setting download from "HBase -> "Service Actions" -> "Download Client Configuration" in Ambari. 
+-Then run:
 `compile.sh`
