@@ -5,7 +5,10 @@ To install HBase and test it on losalamos.
 HBase is a column based NoSQL database. For more information, you can refer to [this](https://en.wikipedia.org/wiki/Apache_HBase)
 
 # Install
-You can choose to install HBase during the Ambari set-up process. Just choose the 'Add service' option, select 'HBase', and proceed to install as you did for the other components.
+-You can choose to install HBase during the Ambari set-up process. Just choose the 'Add service' option, select 'HBase', and proceed to install as you did for the other components.
+
+-If you want HBase work well will Ambari, pay attention to your iptable settings. You must set accept rules to the Ambari and HBase related ports before you do reject or drop. For detail ports, you may refer to this [site](http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_ambari_reference_guide/content/_default_network_port_numbers_-_ambari.html) and search the key word "160" in this [site](https://hbase.apache.org/book.html).
+
 
 ![alt text](https://github.com/CleoJiang/CCAssignment/blob/master/WeChat_1458152481.jpeg)
 <!-- Image courtesy of Group 14, from Storm.md -->
