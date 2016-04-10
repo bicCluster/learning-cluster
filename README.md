@@ -203,7 +203,7 @@ After configuring iptables, all four machines should be able to connect to the I
 
 You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
 
-If you block or drop some important ports (i.e., 22, 8080), you might lose the SSH connection or HTTP connection.
+If you block or drop some important ports (i.e., 22, 80, 8080), you might lose the SSH connection or HTTP connection.
 
 ### Tips
 
@@ -212,6 +212,8 @@ If you block or drop some important ports (i.e., 22, 8080), you might lose the S
 3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
 5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`. Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP(10.X.X.X).
+6. The IP tables are stored in memory. You should save their state in case a restart is required (Ideally this won't happen). [This](http://www.cyberciti.biz/faq/how-do-i-save-iptables-rules-or-settings/) tells you how to do it.
+7. It is also a good idea to keep a backup of your command history, in case you want to repeat what you did earlier, or if you want to figure out at which step you were probably going wrong. you can use the 'history' command to do this.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
