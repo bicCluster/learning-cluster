@@ -2,7 +2,7 @@
 To install HBase and test it on losalamos.
 
 # Introduction
-HBase is a clolumn based NoSQL database. For more information, you can refer to [this](https://en.wikipedia.org/wiki/Apache_HBase)
+HBase is a column based NoSQL database. For more information, you can refer to [this](https://en.wikipedia.org/wiki/Apache_HBase)
 
 # Install
 You can choose to install HBase during the Ambari set-up process. Just choose the 'Add service' option, select 'HBase', and proceed to install as you did for the other components.
