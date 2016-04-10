@@ -41,7 +41,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Demo requires TA intervention will add 1~2 points penalty on the previous grade depending on the time spend on intervention.
 
 ## Other (10')
-- Iptables is up on losamalos and has basic protection with minimum iptables (2')
+- Iptables is up on losalamos and has basic protection with minimum iptables (2')
 - Primary Name Node and Data Nodes should be on separate machines. (2')
 - Primary Name Node and Secondary Name Nodes should be on separate machines. (2')
 - NAT test, get google home page on other three machines. (2')
@@ -121,7 +121,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 5  The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
 
-6. `losamalos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
+6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
 
 7. You need to choose unmount the disk partition before installation step. Choose the guided use entire disk, if there is multiple partition selections, just take the default one. 
 
@@ -130,7 +130,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 ## <a name="install-subnet">Establish Subnet</a>
 
 Notice: during the entire process (even after you finish this part), you’d better not reboot any of the four machines after you have done with following establish subnet steps, otherwise you may lose your network connection and need to install the OS once again (Welcome for the notes if you could solve this problems without reinstalling OS).
-There are two ways, which is DHCP and static IP, to setup connection between `losamalos` and the other threes machine `alpha`, `beta` and `gamma`. Static IP is easier and safer, so the following step instruction is based on static IP method. If you want to use DHCP, please refer to the instruction below the `Steps` part.
+There are two ways, which is DHCP and static IP, to setup connection between `losalamos` and the other threes machine `alpha`, `beta` and `gamma`. Static IP is easier and safer, so the following step instruction is based on static IP method. If you want to use DHCP, please refer to the instruction below the `Steps` part.
 ### Steps
 
 1. Connect servers physically, through the switch and network adapter ports on each machine. 
@@ -167,7 +167,7 @@ When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the comma
       broadcast 10.0.0.255
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
-If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
+The dns-nameservers can be the IP of any DNS service, not necessarily the one provided in the example(which is that of Google). If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
 6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
 7. You should be able to ping each other now using IP.
 
@@ -247,7 +247,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line.
-	- Remember to set id_rsa.pub as authroized_keys in the `losamalos` if you want other slave machines to login using `ssh losamalos`.
+	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
 	
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
@@ -255,12 +255,12 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
 * Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
-* You need to install both `ambari-server` and `ambari-agent` on `losamalos`, and you only need to install `ambari-agent` on three innet machine,
+* You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and you only need to install `ambari-agent` on three innet machine,
 * But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be doen through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
 * If any/all of the 'target hosts' fail to register, it might be because of the following problems:
         - **Hostname conflict**. Look for errors in the log. If there is a hostname conflict (eg: expecting alpha.pc.cs.cmu.edu but got alpha), you can change the hostname by using the `hostname <name>` command.
         - Misconfiguration of the ambari agents. Remove the ambari installation and try again with a clean slate. (Not for losalamos)
-* While installing `ambari-server` on `losamalos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
+* While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
 * Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
 * While going through the Ambari Install Wizard, there are several parts you should watch out: 
