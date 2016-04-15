@@ -116,15 +116,15 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 2. Sometimes the system may get stuck when reboots after completing installation, in such rare cases, just press the reboot button on the back of the server for more than 10 seconds and restart the system.
 
-3. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network autoconfiguration failed", just ignore and continue.
+3. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network auto configuration failed", just ignore and continue.
 
 4. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose `not to update the server automatically` when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
 
-5  The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
+5. The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
 
 6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
 
-7. You need to choose unmount the disk partition before installation step. Choose the guided use entire disk, if there is multiple partition selections, just take the default one. 
+7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. 
 
 
 
@@ -202,7 +202,7 @@ If the above command lines don't work in your case, please refer to this [HOWTO 
 Attention: `HOWTO WIKI` is not totally same as our case, according to the image above. `eth0` and `eth1` are supposed to be swapped in our case, compared with the examples in the wiki. Don't overthink the command lines in HOWTO WIKI. Just type in the commands, they are not script.
 After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
-You may want to confiture the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wronly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
+You may want to configure the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wrongly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
 
 If you block or drop some important ports (i.e., 22, 80, 8080), you might lose the SSH connection or HTTP connection.
 
