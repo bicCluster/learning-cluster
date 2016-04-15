@@ -107,6 +107,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 7. How do you want to manage upgrades on this system? `Install security updates automatically`
 8. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
 9. Install the GRUB boot loader to the master boot record? Choose `YES`.
+10. Unmount partitions that are in use? `YES`
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
