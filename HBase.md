@@ -1,11 +1,11 @@
 # Objective
-To install HBase and test it on losalamos.
+To install HBase and test it(load data and query data) on losalamos.
 
 # Introduction
 HBase is a column based NoSQL database. For more information, you can refer to [this](https://en.wikipedia.org/wiki/Apache_HBase)
 
 # Install
--You can choose to install HBase during the Ambari set-up process. Just choose the 'Add service' option, select 'HBase', and proceed to install as you did for the other components.
+-You can choose to install HBase during the Ambari set-up process. Just choose the 'Add service' option, select 'HBase', and proceed to install as you did for the other components. (Or you can install HBase while installing services in the Ambari Website)
 
 -If you want HBase work well will Ambari, pay attention to your iptable settings. You must set accept rules to the Ambari and HBase related ports before you do reject or drop. For detail ports, you may refer to this [site](http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_ambari_reference_guide/content/_default_network_port_numbers_-_ambari.html) and search the key word "160" in this [site](https://hbase.apache.org/book.html).
 
@@ -16,7 +16,7 @@ HBase is a column based NoSQL database. For more information, you can refer to [
 
 
 # Test
-## Test HBase Shell
+## Common command for HBase
 To enter HBase shell, use:
 ```bash
 hbase shell
@@ -64,7 +64,28 @@ To check the content in your table:
 ```bash
 scan 'table_name'
 ```
-For more hbase shell command, you may refer to [this](https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/)
+
+To create data in your table:
+```bash
+create 'table_name', 'column_family1', 'column_family2'
+```
+
+To create data in your table:
+```bash
+put 'table_name','row_no','column family1:qualifier', 'value'
+```
+
+To get data in your table (this command is based on the index of row number):
+```bash
+get 'table_name', 'rowid', {COLUMN ⇒ ‘column family:column name’}
+```
+
+To delete a table or change its settings, you need to first disable the table using the disable command. You can re-enable it using the enable command.
+```bash
+disable ‘table_name’
+```
+
+For more hbase shell command, you may refer to [this](https://learnhbase.wordpress.com/2013/03/02/hbase-shell-commands/) or [this](http://www.tutorialspoint.com/hbase/index.htm)
 
 ## Test Example Code
 -You can use the example project provided [here](https://github.com/CodeMySky/hbase-hortonworks). To run your own implementation, replace the java files in hbase-hortonworks-master\src\main\java with your own.
