@@ -149,7 +149,7 @@ You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in
 Attention: comment the keyword `loopback` and `dhcp` if you use static ip method. `loopback` and `dhcp` are the default keywords which have already been in the files.
 3. (Recommended)Still in the configuration of `losalamos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
 ```
-     localhost 127.0.0.1
+     127.0.0.1 localhost
      10.0.0.2 losalamos.pc.cs.cmu.edu losalamos
      10.0.0.3 alpha.pc.cs.cmu.edu alpha
      10.0.0.4 beta.pc.cs.cmu.edu beta
