@@ -36,5 +36,7 @@ We ran the ExclamationTopology in Los Alamos like this:
 
 You would be able to see the topology running in the StormUI. In our case, we openned the UI in port 8744.
 
-You can get more information from [this](http://storm.apache.org/releases/current/Tutorial.html)link. 
+![image](StormTopology.png)
+
+You can get more information from [this](http://storm.apache.org/releases/current/Tutorial.html) link. 
 
