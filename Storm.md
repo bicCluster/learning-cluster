@@ -22,3 +22,19 @@ Refer to Official Document [here](http://docs.hortonworks.com/HDPDocuments/HDP2/
 (1 supervisor.childopts property<br />
 (2 worker.childopts property<br />
 
+#Running a Storm Application
+You can use the example from the Apache [storm-starter] (https://github.com/apache/storm/tree/v1.0.0/examples/storm-starter) project. This project contains several examples to learn about Storm in Java and its multilang capabilities. 
+
+Storm uses "topologies" to do realtime computations. A topology is a graph of computation. Each node in the topology contains the processing logic, and the links between each node indicate how the data should be passed around between nodes.
+
+After creating a jar, run the Storm application in the cluster with the following command:</br>
+* storm jar all-my-code.jar org.apache.storm.MyTopology arg1 arg2
+
+We ran the ExclamationTopology in Los Alamos like this:
+
+* storm jar storm-starter-0.0.1-storm-0.9.0.1.jar storm.starter.ExclamationTopology org.apache.storm.starter.ExclamationTopology -c storm.starter.ExclamationTopology org.apache.storm.starter.ExclamationTopology -c nimbus.host=losalamos.pc.cs.cmu.edu
+
+You would be able to see the topology running in the StormUI. In our case, we openned the UI in port 8744.
+
+You can get more information from [this](http://storm.apache.org/releases/current/Tutorial.html)link. 
+
