@@ -124,7 +124,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
 
-7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. 
+7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. If you get a note like this: "Note that all data on the disk you select will be erased, but not before you confirm that you really want to make changes. Select disk to partition:" and select "SCSI3 (2,0,0) (sda) - 72.7 GB DELL PERC 5/i" 
 
 
 
