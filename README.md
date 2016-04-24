@@ -238,6 +238,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 7. You can set ulimit at /etc/security/limits.conf, make sure you change the ulimit of the ACCOUNT YOU USE(e.g root) to install Ambari. **Do not** reboot the system when you finish the ulimit installation. If do, you may need to reinstall the machine.
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
+* While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: ulimit -a
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 
 * You need to set up password-less SSH during the process:
