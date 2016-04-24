@@ -233,6 +233,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 Follow these steps on all four systems:
+
 i)
 >> sudo apt install ntp
 
