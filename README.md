@@ -255,6 +255,7 @@ iv)
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
 6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
 7. You can set ulimit at /etc/security/limits.conf, make sure you change the ulimit of the ACCOUNT YOU USE(e.g root) to install Ambari. **Do not** reboot the system when you finish the ulimit installation. If do, you may need to reinstall the machine.
+8. You do not need to do the section 1.5 of "Using a Local Repository"
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
 * While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: ulimit -a
