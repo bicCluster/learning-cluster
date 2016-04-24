@@ -241,10 +241,10 @@ ii)
 >> sudo vi /etc/ntp.conf
 
 iii) Change the pool of servers:
->>server 0.north-america.pool.ntp.org
->>server 1.north-america.pool.ntp.org
->>server 2.north-america.pool.ntp.org
->>server 3.north-america.pool.ntp.org 
+# server 0.north-america.pool.ntp.org
+# server 1.north-america.pool.ntp.org
+# server 2.north-america.pool.ntp.org
+# server 3.north-america.pool.ntp.org 
 
 iv)
 >> sudo service ntp restart
