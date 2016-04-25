@@ -286,7 +286,7 @@ v)
 	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
 	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
 	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
-	- The way to achieve password-less SSH from server A to server B (under root account):
+	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
 	```
 	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
 	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
