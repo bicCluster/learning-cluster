@@ -250,11 +250,13 @@ ii)
 >> sudo vi /etc/ntp.conf
 
 iii) Change the pool of servers:
-
+*for losalamos*
 server 0.north-america.pool.ntp.org
 server 1.north-america.pool.ntp.org
 server 2.north-america.pool.ntp.org
 server 3.north-america.pool.ntp.org 
+
+*for others, put the above lines as well as the one below*
 server losalamos.pc.cs.cmu.edu prefer iburst
 
 
