@@ -264,8 +264,10 @@ server 3.us.pool.ntp.org
 *for others, put the above lines as well as the one below*
 server losalamos.pc.cs.cmu.edu prefer iburst
 
-
 iv)
+watch ntpq -cpe -cas
+
+v)
 >> sudo service ntp restart
 ```
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
