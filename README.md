@@ -242,7 +242,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 Follow these steps on all four systems:
-
+```
 i)
 >> sudo apt install ntp
 
@@ -250,17 +250,17 @@ ii)
 >> sudo vi /etc/ntp.conf
 
 iii) Change the pool of servers:
-```
+
 server 0.north-america.pool.ntp.org
 server 1.north-america.pool.ntp.org
 server 2.north-america.pool.ntp.org
 server 3.north-america.pool.ntp.org 
 server losalamos.pc.cs.cmu.edu prefer iburst
-```
+
 
 iv)
 >> sudo service ntp restart
-
+```
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
 6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
