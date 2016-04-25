@@ -283,8 +283,19 @@ v)
 * You need to set up password-less SSH during the process:
 	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
 	- The goal is that you can ssh from any one of the four machines to the root of other three without typing in password manually.
+	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
 	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
 	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
+	```
+	The way to achieve password-less SSH from server A to server B (under root account):
+	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
+	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+	3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+	4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
+	5. ssh root@B
+	```
+	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
+	
 	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
@@ -309,6 +320,7 @@ v)
 * While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
 * Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
+* Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try “source –s <filename>” here. It might works.
 * While going through the Ambari Install Wizard, there are several parts you should watch out: 
 	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
