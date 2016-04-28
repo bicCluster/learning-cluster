@@ -62,3 +62,31 @@ It is a web-based notebook that enables interactive data analytics. You can make
 7. You can check if zeppelin is working by going to ```http://losalamos.pc.cs.cmu.edu:8000``` and checking whether it works.
 
 8. You can visit the following website for other details: <https://zeppelin.incubator.apache.org/docs/0.6.0-incubating-SNAPSHOT/install/install.html>
+
+###Tips:
+
+1. Before you run your own scala code on zeppelin, make sure "spark %spark..." is blue and click save
+
+2. You can use scala version of word count as example to test if your zepperlin works properly.
+   For code, please refer to <http://spark.apache.org/examples.html>
+   Make sure you change the path of textFile function in example to valid path like "README.md"
+
+3. During the installation of zepperlin, make sure you set up proper version number of dependencies using "export" if neccessary
+
+4. If you encounter any problem during installation, make sure that you satisfy all requirement for installing zepperlin.
+   If you don't have requirements prepared, install it.
+   sudo apt-get update
+   sudo apt-get install git
+   sudo apt-get install openjdk-7-jdk
+   sudo apt-get install npm
+   sudo apt-get install libfontconfig
+
+   # install maven
+   wget http://www.eu.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
+   sudo tar -zxf apache-maven-3.3.3-bin.tar.gz -C /usr/local/
+   sudo ln -s /usr/local/apache-maven-3.3.3/bin/mvn /usr/local/bin/mvn
+   
+5. Kind reminder: Please also refer to the official github of zepperlin for the latest version before you install. Any package 
+   or command on this page may become outdate since zepperlin is a fast-growing product.
+   Check <https://github.com/apache/incubator-zeppelin> for more details.
+
