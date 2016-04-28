@@ -75,12 +75,13 @@ It is a web-based notebook that enables interactive data analytics. You can make
 
 4. If you encounter any problem during installation, make sure that you satisfy all requirement for installing zepperlin.
    If you don't have requirements prepared, install it.
-   sudo apt-get update
-   sudo apt-get install git
-   sudo apt-get install openjdk-7-jdk
-   sudo apt-get install npm
-   sudo apt-get install libfontconfig
-
+   <ul>
+   <li> sudo apt-get update </li>
+   <li> sudo apt-get install git </li>
+   <li> sudo apt-get install openjdk-7-jdk </li>
+   <li> sudo apt-get install npm </li>
+   <li> sudo apt-get install libfontconfig </li>
+   </ul>
    install maven
    wget http://www.eu.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
    sudo tar -zxf apache-maven-3.3.3-bin.tar.gz -C /usr/local/
