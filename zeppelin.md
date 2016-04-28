@@ -14,48 +14,48 @@ wget http://www.webhostingjams.com/mirror/apache/incubator/zeppelin/0.5.6-incuba
 ```
 
 2. Make directory
-```
-sudo mkdir /usr/local/src/zeppelin
-```
+ ```
+  sudo mkdir /usr/local/src/zeppelin
+ ```
 
 3. Unpack the contents of the downloaded zeppelin archive to the created directory
-```
-sudo tar xvf zeppelin-0.5.6-incubating-bin-all.tgz -C /usr/local/src/zeppelin/
-```
+ ```
+  sudo tar xvf zeppelin-0.5.6-incubating-bin-all.tgz -C /usr/local/src/zeppelin/
+ ```
 
 4. Configure Environment of Zeppelin:
   *As the port 8080 is dedicated to Ambari, You need to change the port for Zeppelin. This is because the default port for Zeppelin is also 8080. We gave port number 8000
-```
-In the conf/zeppelin-env.sh file, make changes and put:
-ZEPPELIN_PORT="8000"
-AND
-Rename the conf/zeppelin-site.xml.template file to conf/zeppelin-site.xml and change the port to 8000
-```
+ ```
+  In the conf/zeppelin-env.sh file, make changes and put:
+  ZEPPELIN_PORT="8000"
+  AND
+  Rename the conf/zeppelin-site.xml.template file to conf/zeppelin-site.xml and change the port to 8000
+ ```
 
 5. Start Zeppelin with a service manager:
   *In the /etc/init/zeppelin.conf file:
-```
-description "zeppelin"
-
-start on (local-filesystems and net-device-up IFACE!=lo)
-stop on shutdown
-
-# Respawn the process on unexpected termination
-respawn
-
-# respawn the job up to 7 times within a 5 second period.
-# If the job exceeds these values, it will be stopped and marked as failed.
-respawn limit 7 5
-
-# zeppelin was installed in /usr/share/zeppelin in this example
-chdir /usr/share/zeppelin
-exec bin/zeppelin-daemon.sh upstart
-```
-```
-sudo service zeppelin start
-sudo service zeppelin stop
-sudo service zeppelin restart
-```
+  ```
+  description "zeppelin"
+  
+  start on (local-filesystems and net-device-up IFACE!=lo)
+  stop on shutdown
+  
+  # Respawn the process on unexpected termination
+  respawn
+  
+  # respawn the job up to 7 times within a 5 second period.
+  # If the job exceeds these values, it will be stopped and marked as failed.
+  respawn limit 7 5
+  
+  # zeppelin was installed in /usr/share/zeppelin in this example
+  chdir /usr/share/zeppelin
+  exec bin/zeppelin-daemon.sh upstart
+  ```
+  ```
+  sudo service zeppelin start
+  sudo service zeppelin stop
+  sudo service zeppelin restart
+  ```
 
 6. If there are any problems, do not reboot, just logout of all active sessions and re - login to check if the changes have taken effect.
 
