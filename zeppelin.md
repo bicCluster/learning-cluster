@@ -9,9 +9,9 @@ It is a web-based notebook that enables interactive data analytics. You can make
 
 # Steps and Commands:
 1. Download file (pre-compiled binary package)
-```
-wget http://www.webhostingjams.com/mirror/apache/incubator/zeppelin/0.5.6-incubating/zeppelin-0.5.6-incubating-bin-all.tgz
-```
+  ```
+  wget http://www.webhostingjams.com/mirror/apache/incubator/zeppelin/0.5.6-incubating/zeppelin-0.5.6-incubating-bin-all.tgz
+  ```
 
 2. Make directory
  ```
