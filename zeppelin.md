@@ -81,7 +81,7 @@ It is a web-based notebook that enables interactive data analytics. You can make
    sudo apt-get install npm
    sudo apt-get install libfontconfig
 
-   # install maven
+   install maven
    wget http://www.eu.apache.org/dist/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz
    sudo tar -zxf apache-maven-3.3.3-bin.tar.gz -C /usr/local/
    sudo ln -s /usr/local/apache-maven-3.3.3/bin/mvn /usr/local/bin/mvn
