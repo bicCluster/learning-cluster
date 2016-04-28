@@ -97,17 +97,23 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 1. burn by command `dd` [[ref]](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx)
 2. burn by UNetbootin [[ref]](http://unetbootin.github.io/) Please update if there are methods that work. A convenient method is to install Ubuntu from CD (the CD is already provided, you can find it near the machines).
 
-###Bullet points when installation 
-1. Detect keyboard layout? Select `No`
-2. Encrypt your home directory? Select `No`
-3. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
-4. Write changes to disks? Select `Yes`
-5. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`.
-6. HTTP proxy information? `Continue` with blank
-7. How do you want to manage upgrades on this system? `Install security updates automatically`
-8. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
-9. Install the GRUB boot loader to the master boot record? Choose `YES`.
-10. Unmount partitions that are in use? `YES`
+###Bullet points when installation
+1. Insert the disk and press the power button to turn-off the machine. The lights on the machine should turn-off after a few seconds. Then press the pwer button again to start the machine.
+2. Once the machine starts, press F11 to enter Boot menu. Select `boot from disk` option.
+3. Select the `Install Ubuntu Server` option.
+4. Make the appropriate language realted settings.
+5. Detect keyboard layout? Select `No`
+6. Select the appropriate time settings.
+7. Encrypt your home directory? Select `No`
+8. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
+9. Write changes to disks? Select `Yes`
+10. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+11. HTTP proxy information? `Continue` with blank
+12. How do you want to manage upgrades on this system? `Install security updates automatically`
+13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
+14. Install the GRUB boot loader to the master boot record? Choose `YES`.
+15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
+16. Unmount partitions that are in use? `YES`
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
@@ -134,7 +140,7 @@ Notice: during the entire process (even after you finish this part), you’d bet
 There are two ways, which is DHCP and static IP, to setup connection between `losalamos` and the other threes machine `alpha`, `beta` and `gamma`. Static IP is easier and safer, so the following step instruction is based on static IP method. If you want to use DHCP, please refer to the instruction below the `Steps` part.
 ### Steps
 
-1. Connect servers physically, through the switch and network adapter ports on each machine. 
+1. Connect servers physically, through the switch and network adapter ports on each machine. That is, connect the gray ethernet cables from each machine to the switch (small white box at the top corner of the server rack).  
 2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be 
 ```
     auto eth0
@@ -146,7 +152,7 @@ There are two ways, which is DHCP and static IP, to setup connection between `lo
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
 You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
-Attention: comment the keyword `loopback` and `dhcp` if you use static ip method. `loopback` and `dhcp` are the default keywords which have already been in the files.
+Attention: comment the keyword `loopback` and `dhcp` if you use static ip method (This is not needed!). `loopback` and `dhcp` are the default keywords which have already been in the files.
 3. (Recommended)Still in the configuration of `losalamos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
 ```
      127.0.0.1 localhost
@@ -215,15 +221,29 @@ You may want to configure the iptables to block some incoming traffic and allow 
 
 If you block or drop some important ports (i.e., 22, 80, 8080), you might lose the SSH connection or HTTP connection.
 
+## IPtable explanation:
+IPtables are like rule books that are used when a connection tries to establish itself on the server. The tables find a matching rule and take the corresponding action or use the default rule if no match is found. In the assignment we could add the `ACCEPT` rule for connections through ports that we know are being used by the required services (Such as port 22 for ssh etc.) and place a default rule to block all connections. Thus all required connections would be allowed and others would automatically be blocked.
+
+It is very important to remember and save the changes that have been made to the iptable, otherwise all the rules will get deleted the next time the ip table servise is restarted. To save the ip table use the following command in Ubuntu:
+`sudo /sbin/iptables-save`
+
+To further understand IP tables here are a few good resources:
+* [Beginners Guide](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/)
+* [Wikipedia Page](https://en.wikipedia.org/wiki/Iptables)
+* [How To Page](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules)
+* [Minimum Requirements](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration)
+
+
 ### Tips
 
 1. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files;(In order to resolve DNS host name you should add dns-nameservers line when you configure etc/network/interfaces on four machines as indicated above, otherwise the inner machine can only ping external IP address.) or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
-2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the principle figure shown above.
+2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the iptable minimum requirements table shown above.
 3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
 5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`. Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP(10.X.X.X).
-6. The IP tables are stored in memory. You should save their state in case a reboot is required (**Do not** reboot for any reason, if avoidable). [This](http://www.cyberciti.biz/faq/how-do-i-save-iptables-rules-or-settings/) tells you how to do it.
-7. It is also a good idea to keep a backup of your command history, in case you want to repeat what you did earlier, or if you want to figure out at which step you were probably going wrong. This can be done using
+6. Apart from the above mentioned ports, remember to also accept the port for the additional service that is required to be enabled (E.g. port 8088 for Zepplin in our case). 
+7. The IP tables are stored in memory. You should save their state in case a reboot is required (**Do not** reboot for any reason, if avoidable). [This](http://www.cyberciti.biz/faq/how-do-i-save-iptables-rules-or-settings/) tells you how to do it.
+8. It is also a good idea to keep a backup of your command history, in case you want to repeat what you did earlier, or if you want to figure out at which step you were probably going wrong. This can be done using
 ```bash
 history > historyLog
 ```
@@ -282,7 +302,7 @@ v)
 
 * You need to set up password-less SSH during the process:
 	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
-	- The goal is that you can ssh from any one of the four machines to the root of other three without typing in password manually.
+	- The goal is that you can ssh from any one of the four machines to the root of all (including itself) without typing in password manually.
 	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
 	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
 	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
@@ -303,7 +323,7 @@ v)
 	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
 	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
-	- When input the private key in the Ambari installation, don't forget to include the first line and last line.
+	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
 	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
 	
 * If you come accross failure in registering four machines, check:
@@ -313,7 +333,7 @@ v)
 * Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
 * You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and you only need to install `ambari-agent` on three innet machine,
-* But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be doen through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
+* But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be done through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
 * If any/all of the 'target hosts' fail to register, it might be because of the following problems:
         - **Hostname conflict**. Look for errors in the log. If there is a hostname conflict (eg: expecting alpha.pc.cs.cmu.edu but got alpha), you can change the hostname by using the `hostname <name>` command.
         - Misconfiguration of the ambari agents. Remove the ambari installation and try again with a clean slate. (Not for losalamos)
@@ -324,11 +344,12 @@ v)
 * While going through the Ambari Install Wizard, there are several parts you should watch out: 
 	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
-	- When assinging master, go through the `Grading Criteria` in `Requirements` section carefully.
+	- When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
 	- Restart the service before runing Demo
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
 * Select default setting when installing Ambari Server.
+* During installation, the setup may prompt a warning related to increasing the heap size. Go to the previous page and make all the required changes. On clicking `Next`, the same warning will be shown again. Do not worry about it and proceed to the next step.
 * If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
 * Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
 * If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
@@ -348,7 +369,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 
 ### Steps
 
-1. Create a input directory under the user of `hdfs`
+1. Create a input directory under the user of `hdfs`(use command `su hdfs`)
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files with `javac` and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
@@ -357,7 +378,8 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 
 ### Tips
 
-- If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825)
+- If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825) or try using `sudo`.
+- Make sure the file paths provided will creating the jar and running are correct.
 - Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
 - The output folder of your map reduce program should not exist when executing the jar program.
@@ -392,7 +414,7 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 5. Login to Ambari webpage and create the cluster
 
 
-If you cann't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
+If you can't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
 
 # <a name="trubleshoot">Basic Network Troubleshooting</a>
 ## Troubleshooting Checklist
