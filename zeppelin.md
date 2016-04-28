@@ -43,7 +43,7 @@ It is a web-based notebook that enables interactive data analytics. You can make
   # Respawn the process on unexpected termination
   respawn
   
-  # respawn the job up to 7 times within a 5 second period.
+  # respawn the job up to 7 times within a 5 second period. 
   # If the job exceeds these values, it will be stopped and marked as failed.
   respawn limit 7 5
   
