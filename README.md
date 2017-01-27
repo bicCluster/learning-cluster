@@ -25,27 +25,26 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 
 # Grading Criteria (30')
 
-## Wiki (10')
-- Beyond expectation, more than TA would write (12')
-- Meet expectation (10')
-- Basically meet expectation, missing some points that TA think is necessary for other groups (8')
-- Below expectation (6')
-- Less than 10 lines of wiki added/Modified, or modification makes no sense (2')
+## Wiki (extra points 5')
+- Write down all the problems you have met and how you solve them.
+- Make a clear demonstration on how you demo runs. For example, in a wordcount demo, you can describe how NameNode, DataNode, Jobtracker, Tasktracker (or container in YARN) work together to run this demo.
+- Improve the sections of the previous wiki which are ambiguous.
+- Less than 10 lines of wiki added/Modified, or simple modification makes no sense.
 
-## Self designed demo with scripts to run without any intervention (10')
-- Beyond expectation, test some points that TA would not think of (12')
-- Meet expectation (10')
-- Basically meet expectation (8')
+## Self designed demo with scripts to run without any intervention (15')
+- Beyond expectation, test some points that TA would not think of, and make a perfect explanation on how the demo runs. (15')
+- Meet expectation, the demo works fine, make reasonable explanation. (12')
+- Basically meet expectation (9')
 - Below expectation, there are some essential points are not tested (6')
 - Demo does not work will add another 3 points penalty on the previous grade.
 - Demo requires TA intervention will add 1~2 points penalty on the previous grade depending on the time spend on intervention.
 
-## Other (10')
-- Iptables is up on losalamos and has basic protection with minimum iptables (2')
-- Primary Name Node and Data Nodes should be on separate machines. (2')
-- Primary Name Node and Secondary Name Nodes should be on separate machines. (2')
-- NAT test, get google home page on other three machines. (2')
-- Strong Password, password including at least a number and a letter and longer than 6 characters (2')
+## Other (15')
+- Iptables is up on losalamos and has basic protection with minimum iptables (3')
+- Primary Name Node and Data Nodes should be on separate machines. (3')
+- Primary Name Node and Secondary Name Nodes should be on separate machines. (3')
+- NAT test, get google home page on other three machines. (3')
+- Strong Password, password including at least a number and a letter and longer than 6 characters (3')
 - No Alert in Ambari. (1' each alert, 2' max)
 
 ### Minimum Iptables
