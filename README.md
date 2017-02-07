@@ -14,6 +14,8 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 * [How to Re-create the Cluster](#recreate-cluster)
 * [Basic Network Troubleshooting](#troubleshoot)
 
+## You may want to bring ear plugs to the machine lab, as you will be working next to a rack server for a couple of hours. Once you are able to ssh into your cluster, you can access them from outside the lab.
+
 # <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
 - Network Structure: NAT, `losalamos` need to be the NAT server. `losalamos` can be connected to the port on wall through "eno2".
@@ -130,6 +132,9 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
 
 7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. If you get a note like this: "Note that all data on the disk you select will be erased, but not before you confirm that you really want to make changes. Select disk to partition:" and select "SCSI3 (2,0,0) (sda) - 72.7 GB DELL PERC 5/i" 
+
+8. When reboot after installation is complete, press F11 to get into the boot menu then choose "reboot from Hard Drive C"
+
 
 
 
@@ -314,7 +319,7 @@ v)
 	5. ssh root@B
 	```
 	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
-	
+	- Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
 	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
@@ -324,6 +329,7 @@ v)
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
 	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
+	- The Ambari Web Console has by default admin/admin as username/password
 	
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
@@ -361,6 +367,7 @@ v)
 * For installing Ambari (except for logging into node for debug), you DON'T need to install python2.6, Ambari is compatible with python2.6 or later version.
 * If you decide to install python yourself, actually for anything, DO NOT use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
 * SName Node and Name node should be on different machines. Data Node and Name Node should be on different machines. Name node(Not SName Node) is the primary Name Node.
+
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
@@ -433,3 +440,6 @@ All your are doing is going either up or down the network model layers.
 * `ifconfig`: Tell you everything about the network interface
 * `iptables -L -v` Check current valid rule in iptable
 * `scp` Please refer to [Here](http://www.hypexr.org/linux_scp_help.php)
+
+
+
