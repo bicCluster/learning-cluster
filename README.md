@@ -14,6 +14,8 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 * [How to Re-create the Cluster](#recreate-cluster)
 * [Basic Network Troubleshooting](#troubleshoot)
 
+## You may want to bring ear plugs to the machine lab, as you will be working next to a rack server for a couple of hours. Once you are able to ssh into your cluster, you can access them from outside the lab.
+
 # <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
 - Network Structure: NAT, `losalamos` need to be the NAT server. `losalamos` can be connected to the port on wall through "eno2".
