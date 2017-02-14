@@ -71,6 +71,7 @@ REJECT     all  --  any    any     anywhere             anywhere             rej
 - Every server has two network adapters, `eth0` and `eth1`, and it can only connects to the Internet by `eth1`. So please double-check the connection ports;
 - Since `losalamos` uses `eth1` to connect to the Internet, it should use `eth0` for the sub network.
 - Keep the roles of `eth0` and `eth1` in mind when you are configuring iptables with the linked tutorials: you may need to change the bash command given in those tutorials.
+- **Important** : Check the machine which has 2 UPS backup connections - use them as losalamos (name node). Currently, it is the top most machine in the rack.(Ask TAs in case of any issues). Sometimes, the power backup fails, and hence having an additional backup helps to keep the name node running.
 
 <hr>
 
