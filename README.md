@@ -135,7 +135,12 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 8. When reboot after installation is complete, press F11 to get into the boot menu then choose "reboot from Hard Drive C"
 
-
+9. During OS installation, the Losalamos machine may give a DHCP error while autoconfiguring the network. In this case: ignore and continue installation. Once finished, login to the Ubuntu server, and add the following contents to the `/etc/network/interfaces` file.
+```
+auto eth1
+iface eth1 inet dhcp
+```
+Now run the command: `sudo ifdown --exclude=lo –a && sudo ifup --exclude=lo –a`. You should now be able to `ping google.com` without an issue.
 
 
 ## <a name="install-subnet">Establish Subnet</a>
@@ -194,7 +199,7 @@ ii) Then type the following command:
 iii) Check if [never]
 cat /sys/kernel/mm/transparent_hugepage/enabled
 ```
-
+4. One really useful hack to speed up the entire subnetting process is to initially load the final `/etc/hosts` and `/etc/network/interfaces` files for *alpha, beta, gamma and losalamos* in folders on a pen drive. This can then be mounted on a disk(refer to [link](http://askubuntu.com/questions/37767/how-to-access-a-usb-flash-drive-from-the-terminal-how-can-i-mount-a-flash-driv)) and the files directly copied. This prevents bugs while typing and setting up these files.
 
 * Using DHCP
 
@@ -310,7 +315,8 @@ v)
 	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
 	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
 	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
-	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
+	- Remember to setup passwordless ssh **most importantly** between root users of all 4 machines. The best way to achieve this can be by generating the public key on losalamos@losalamos which can then be transferred to the root@losalamos, then alpha@alpha and root@alpha from there, and so on. To copy from the general user to the root user, simply copy the `/<general_user>/.ssh/id_rsa.pub` to the `/root/.ssh/authorized_keys`. This is crucial and will lead to a failure in a future step unless setup correctly.
+	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be(this method works best):
 	```
 	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
 	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
