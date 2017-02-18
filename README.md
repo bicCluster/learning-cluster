@@ -100,22 +100,22 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 2. burn by UNetbootin [[ref]](http://unetbootin.github.io/) Please update if there are methods that work. A convenient method is to install Ubuntu from CD (the CD is already provided, you can find it near the machines).
 
 ###Bullet points when installation
+Before installation, makesure the monitor and keyboard are connected to the correct machine, otherwise you can't successfully install the system.
 1. Insert the disk and press the power button to turn-off the machine. The lights on the machine should turn-off after a few seconds. Then press the pwer button again to start the machine.
-2. Once the machine starts, press F11 to enter Boot menu. Select `boot from disk` option.
+2. Once the machine starts, press F11 to enter Boot menu. Select `boot from disk` (`IDE CD-ROM device`) option.
 3. Select the `Install Ubuntu Server` option.
 4. Make the appropriate language realted settings.
 5. Detect keyboard layout? Select `No`
 6. Select the appropriate time settings.
-7. Encrypt your home directory? Select `No`
-8. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
-9. Write changes to disks? Select `Yes`
-10. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+7. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+8. Encrypt your home directory? Select `No` 
+9. Unmount partitions that are in use? `YES`, Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one. (details in Tips 7)
+10. Write changes to disks? Select `Yes`
 11. HTTP proxy information? `Continue` with blank
 12. How do you want to manage upgrades on this system? `Install security updates automatically`
 13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
 14. Install the GRUB boot loader to the master boot record? Choose `YES`.
 15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
-16. Unmount partitions that are in use? `YES`
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
@@ -245,7 +245,7 @@ To further understand IP tables here are a few good resources:
 2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the iptable minimum requirements table shown above.
 3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
-5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`. Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP(10.X.X.X).
+5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`(before try this command, make sure that you have added the IP address of losalamos to the hosts file on your laptop, like this `128.x.x.x losalamos.pc.cs.cmu.edu`, otherwise you need to use `ssh username@128.x.x.x`, here `128.x.x.x` is the IP address of losalamos, you can check it on losalamos using command `ifconfig`). Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP (`10.x.x.x`). 
 6. Apart from the above mentioned ports, remember to also accept the port for the additional service that is required to be enabled (E.g. port 8088 for Zepplin in our case). 
 7. The IP tables are stored in memory. You should save their state in case a reboot is required (**Do not** reboot for any reason, if avoidable). [This](http://www.cyberciti.biz/faq/how-do-i-save-iptables-rules-or-settings/) tells you how to do it.
 8. It is also a good idea to keep a backup of your command history, in case you want to repeat what you did earlier, or if you want to figure out at which step you were probably going wrong. This can be done using
@@ -266,7 +266,9 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
-Follow these steps on all four systems:
+Follow these steps on all four systems : 
+
+(Before `i)`, make sure to use `apt-get update` first)
 ```
 i)
 >> sudo apt install ntp
@@ -326,7 +328,7 @@ v)
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
 	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
-	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
+	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
 	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
