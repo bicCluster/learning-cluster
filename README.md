@@ -44,7 +44,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 ## Other (15')
 - Iptables is up on losalamos and has basic protection with minimum iptables (3')
 - Primary Name Node and Data Nodes should be on separate machines. (3')
-- Primary Name Node and Secondary Name Nodes should be on separate machines. (3')
+- Primary Name Node and Secondary Name Nodes (there can be only one Secondary Name Nodes) should be on separate machines. (3')
 - NAT test, get google home page on other three machines. (3')
 - Strong Password, password including at least a number and a letter and longer than 6 characters (3')
 - No Alert in Ambari. (1' each alert, 2' max)
@@ -299,11 +299,11 @@ v)
 ```
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
-6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
+6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask. Make sure selinux-utils is installed first: `apt-get install selinux-utils`.
 7. You can set ulimit at /etc/security/limits.conf, make sure you change the ulimit of the ACCOUNT YOU USE(e.g root) to install Ambari. **Do not** reboot the system when you finish the ulimit installation. If do, you may need to reinstall the machine.
 8. You do not need to do the section 1.5 of "Using a Local Repository"
 
-* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
+* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]` (No idea why use `[user]`, I use `root` instead of `[root]` and it works). Thus you need to replace it with your system username.
 * While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: ulimit -a
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 
@@ -323,7 +323,7 @@ v)
 	```
 	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
 	- Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
-	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
+	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command `sudo passwd`
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
@@ -338,7 +338,7 @@ v)
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
 	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
 	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
-* Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
+* Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line `sudo service ntp start`. (You can use `service --status-all | grep ntp` to check the status of ntp service)
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
 * You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and you only need to install `ambari-agent` on three innet machine,
 * But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be done through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
