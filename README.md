@@ -376,14 +376,38 @@ v)
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
 
+Before you run the test program, make sure you know where the hadoop is installed using the `root` user of `losalamos`:
+1. The installation directory: `/usr/hdp/2.x.x.x-xxxx/hadoop`
+2. Set `HADOOP_HOME`: `export HADOOP_HOME=/usr/hdp/2.x.x.x-xxxx/hadoop` (`2.x.x.x-xxxx` is your corresponding hadoop version)
+3. Set `JAVA_HOME`: `export JAVA_HOME=/usr/jdk64/jdk1.8.x_xx`
+4. Set `PATH`: `export PATH=${JAVA_HOME}/bin:${HADOOP_HOME}/bin:${PATH}`
+5. Set `HADOOP_CLASSPATH`: `export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar`
+6. Set `HADOOP_USER_NAME`: `export HADOOP_USER_NAME=hdfs`
+7. Create the hdfs user directory: `hadoop fs -mkdir -p /user/hdfs`
+
 ### Steps
 
 1. Create a input directory under the user of `hdfs`(use command `su hdfs`)
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files with `javac` and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
-5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs).
+5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs). Use command: `yarn jar WordCount.jar WordCount input_path output_path`
 6. If you want to move the files to HDFS via Ambari UI, you could follow the steps mentioned [here](https://developer.ibm.com/hadoop/blog/2015/10/22/browse-hdfs-via-ambari-files-view/). Also, it is better to create a separate user 'hdfs' instead of 'admin' in Ambari if you follow this approach and give it root permissions in Ambari.
+
+### Demo: KNN
+
+This is just a demo on how to execute KNN in HDFS, details of commands depend.
+
+1. Create relevant directories in hdfs: 
+	1. `hadoop fs -mkdir -p knn`
+	2. `hadoop fs -mkdir -p knn/input`
+	3. `hadoop fs -mkdir -p knn/test`
+2. Transfer relevant directories to hdfs:
+	1. `hdfs dfs -put iris_train_data.csv knn/input`
+	2. `hdfs dfs -put iris_test_data.csv knn/test`
+3. Execute the program and get the result: 
+	1. `yarn jar IRISKNN.jar IRISKNN knn/input knn/output knn/test/iris_test_data.csv 5`
+	2. `hdfs dfs -get knn/output/* .`
 
 ### Tips
 
