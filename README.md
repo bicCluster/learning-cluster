@@ -101,21 +101,26 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 ###Bullet points when installation
 1. Insert the disk and press the power button to turn-off the machine. The lights on the machine should turn-off after a few seconds. Then press the pwer button again to start the machine.
-2. Once the machine starts, press F11 to enter Boot menu. Select `boot from disk` option.
-3. Select the `Install Ubuntu Server` option.
-4. Make the appropriate language realted settings.
-5. Detect keyboard layout? Select `No`
-6. Select the appropriate time settings.
-7. Encrypt your home directory? Select `No`
-8. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
-9. Write changes to disks? Select `Yes`
-10. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
-11. HTTP proxy information? `Continue` with blank
-12. How do you want to manage upgrades on this system? `Install security updates automatically`
-13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
-14. Install the GRUB boot loader to the master boot record? Choose `YES`.
-15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
-16. Unmount partitions that are in use? `YES`
+2. Once the machine starts, press F11 to enter Boot menu. Select `CD-ROM` option.
+3. Make the appropriate language realted settings.
+4. Select the `Install Ubuntu Server` option.
+5. Select location, default 'United States'
+6. Region selection, default 'North America'
+7. Select country 'United States'
+8. Locale settings 'United States'
+9. Detect keyboard layout? Select `No`
+10. Choosing a hostname 'losalamos' or 'alpha' or 'beta' or 'gamma'
+11. Set user name & password
+12. Encrypt your home directory? Select `No`
+13. Select time zone
+14. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
+15. Unmount partitions that are in use? `YES`
+16. Write changes to disks? Select `Yes`
+17. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+18. HTTP proxy information? `Continue` with blank
+19. How do you want to manage upgrades on this system? `Install security updates automatically`
+20. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
+21. Install the GRUB boot loader to the master boot record? Choose `YES`.
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
