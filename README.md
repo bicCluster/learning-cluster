@@ -263,7 +263,7 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 For setup, configure and deploy parts, you may also refer to [This](http://blog.phaisarn.com/node/1391) and [This](https://hadoopjournal.wordpress.com/2015/08/09/hortonworks-hadoop-installation-using-apache-ambari-on-centos6/).
 
 ### Tips
-If the te wget command throws a "request timeout" error, just download the tar file manually and install by continuing the steps mentioned above in pdf.
+If the wget command throws a "request timeout" error, just download the tar file manually and install by continuing the steps mentioned above in pdf.
 
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
 * It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
