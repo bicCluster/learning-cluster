@@ -46,7 +46,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 ## Other (15')
 - Iptables is up on losalamos and has basic protection with minimum iptables (3')
 - Primary Name Node and Data Nodes should be on separate machines. (3')
-- Primary Name Node and Secondary Name Nodes should be on separate machines. (3')
+- Primary Name Node and Secondary Name Nodes (there can be only one Secondary Name Nodes) should be on separate machines. (3')
 - NAT test, get google home page on other three machines. (3')
 - Strong Password, password including at least a number and a letter and longer than 6 characters (3')
 - No Alert in Ambari. (1' each alert, 2' max)
@@ -103,25 +103,22 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 2. burn by UNetbootin [[ref]](http://unetbootin.github.io/) Please update if there are methods that work. A convenient method is to install Ubuntu from CD (the CD is already provided, you can find it near the machines).
 
 ###Bullet points when installation
+Before installation, makesure the monitor and keyboard are connected to the correct machine, otherwise you can't successfully install the system.
 1. Insert the disk and press the power button to turn-off the machine. The lights on the machine should turn-off after a few seconds. Then press the pwer button again to start the machine.
-2. Once the machine starts, press F11 to enter Boot menu. Select `IDE:CD/ROM` option.
+2. Once the machine starts, press F11 to enter Boot menu. Select `boot from disk` (`IDE CD-ROM device`) option.
 3. Select the `Install Ubuntu Server` option.
 4. Make the appropriate language realted settings.
 5. Detect keyboard layout? Select `No`
-6. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
-7. Fullname of the new user:
-8. Encrypt your home directory? Select `No`
-9. Select the appropriate time settings.
-10. Unmount partitions that are in use? `YES`
-11. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
-12. Write changes to disks? Select `Yes`
-13. HTTP proxy information? `Continue` with blank
-14. How do you want to manage upgrades on this system? `Install security updates automatically`
-15. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
-16. Install the GRUB boot loader to the master boot record? Choose `YES`.
-17. Modify the Booting Options to make all the machines `boot from hard drive C`. Or once each machine starts or reboots, press F11 to enter Boot menu. Select `boot from hard drive C` option.
-18. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
-
+6. Select the appropriate time settings.
+7. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+8. Encrypt your home directory? Select `No` 
+9. Unmount partitions that are in use? `YES`, Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one. (details in Tips 7)
+10. Write changes to disks? Select `Yes`
+11. HTTP proxy information? `Continue` with blank
+12. How do you want to manage upgrades on this system? `Install security updates automatically`
+13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
+14. Install the GRUB boot loader to the master boot record? Choose `YES`.
+15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
@@ -174,8 +171,7 @@ Attention: comment the keyword `loopback` and `dhcp` if you use static ip method
      127.0.0.1 localhost
      10.0.0.2 losalamos.pc.cs.cmu.edu losalamos
      10.0.0.3 alpha.pc.cs.cmu.edu alpha
-     10.0.0.4 beta.pc.cs.cmu.edu beta
-     10.0.0.5 gamma.pc.cs.cmu.edu gamma
+     10.0.0.4 beta.pc.cs.cmu.edu beta     10.0.0.5 gamma.pc.cs.cmu.edu gamma
 ```
 This [page](http://linux.die.net/man/5/hosts) can give you more info.
 4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network.
@@ -277,7 +273,9 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
-Follow these steps on all four systems:
+Follow these steps on all four systems : 
+
+(Before `i)`, make sure to use `apt-get update` first)
 ```
 i)
 >> sudo apt install ntp
@@ -312,11 +310,11 @@ v)
 ```
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
-6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
+6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask. Make sure selinux-utils is installed first: `apt-get install selinux-utils`.
 7. You can set ulimit at /etc/security/limits.conf, make sure you change the ulimit of the ACCOUNT YOU USE(e.g root) to install Ambari. **Do not** reboot the system when you finish the ulimit installation. If do, you may need to reinstall the machine.
 8. You do not need to do the section 1.5 of "Using a Local Repository"
 
-* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
+* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]` (No idea why use `[user]`, I use `root` instead of `[root]` and it works). Thus you need to replace it with your system username.
 * While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: ulimit -a
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 
@@ -345,12 +343,12 @@ v)
     - Run the above commands on each machine to set up password-less SSH with the other three. For example, when on losalamos, you want to run the script three times with `B` as alpha, beta, and gamma each time. Use scp to transfer the script file between machines to save time.
 
 	- Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
-	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
+	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command `sudo passwd`
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
 	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
-	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
+	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
 	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
 	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
@@ -361,7 +359,7 @@ v)
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
 	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
 	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
-* Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
+* Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line `sudo service ntp start`. (You can use `service --status-all | grep ntp` to check the status of ntp service)
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
 * You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and you only need to install `ambari-agent` on three innet machine,
 * But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be done through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
@@ -399,14 +397,38 @@ v)
 
 If everything is green on the dashboard of Ambari, you can follow [this](http://www.joshuaburkholder.com/blog/2014/05/15/how-to-run-ava-mrv2-using-hadoop/) to run a mapreduce job on the machines.
 
+Before you run the test program, make sure you know where the hadoop is installed using the `root` user of `losalamos`:
+1. The installation directory: `/usr/hdp/2.x.x.x-xxxx/hadoop`
+2. Set `HADOOP_HOME`: `export HADOOP_HOME=/usr/hdp/2.x.x.x-xxxx/hadoop` (`2.x.x.x-xxxx` is your corresponding hadoop version)
+3. Set `JAVA_HOME`: `export JAVA_HOME=/usr/jdk64/jdk1.8.x_xx`
+4. Set `PATH`: `export PATH=${JAVA_HOME}/bin:${HADOOP_HOME}/bin:${PATH}`
+5. Set `HADOOP_CLASSPATH`: `export HADOOP_CLASSPATH=${JAVA_HOME}/lib/tools.jar`
+6. Set `HADOOP_USER_NAME`: `export HADOOP_USER_NAME=hdfs`
+7. Create the hdfs user directory: `hadoop fs -mkdir -p /user/hdfs`
+
 ### Steps
 
 1. Create a input directory under the user of `hdfs`(use command `su hdfs`)
 2. Write the test MapReduce program (eg. wordcount)
 3. Compile the java files to class files with `javac` and archive the class files into `jar`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
-5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs).
+5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs). Use command: `yarn jar WordCount.jar WordCount input_path output_path`
 6. If you want to move the files to HDFS via Ambari UI, you could follow the steps mentioned [here](https://developer.ibm.com/hadoop/blog/2015/10/22/browse-hdfs-via-ambari-files-view/). Also, it is better to create a separate user 'hdfs' instead of 'admin' in Ambari if you follow this approach and give it root permissions in Ambari.
+
+### Demo: KNN
+
+This is just a demo on how to execute KNN in HDFS, details of commands depend.
+
+1. Create relevant directories in hdfs: 
+	1. `hadoop fs -mkdir -p knn`
+	2. `hadoop fs -mkdir -p knn/input`
+	3. `hadoop fs -mkdir -p knn/test`
+2. Transfer relevant directories to hdfs:
+	1. `hdfs dfs -put iris_train_data.csv knn/input`
+	2. `hdfs dfs -put iris_test_data.csv knn/test`
+3. Execute the program and get the result: 
+	1. `yarn jar IRISKNN.jar IRISKNN knn/input knn/output knn/test/iris_test_data.csv 5`
+	2. `hdfs dfs -get knn/output/* .`
 
 ### Tips
 
