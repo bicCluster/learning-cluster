@@ -114,7 +114,7 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 12. How do you want to manage upgrades on this system? `Install security updates automatically`
 13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
 14. Install the GRUB boot loader to the master boot record? Choose `YES`.
-15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
+15. Before finishing installation, choose `Yes` for `Set clock to UTC` option
 16. Unmount partitions that are in use? `YES`
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
@@ -128,11 +128,11 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 
 4. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose `not to update the server automatically` when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
 
-5. The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
+5. The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server.
 
-6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
+6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection.
 
-7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. If you get a note like this: "Note that all data on the disk you select will be erased, but not before you confirm that you really want to make changes. Select disk to partition:" and select "SCSI3 (2,0,0) (sda) - 72.7 GB DELL PERC 5/i" 
+7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. If you get a note like this: "Note that all data on the disk you select will be erased, but not before you confirm that you really want to make changes. Select disk to partition:" and select "SCSI3 (2,0,0) (sda) - 72.7 GB DELL PERC 5/i"
 
 8. When reboot after installation is complete, press F11 to get into the boot menu then choose "reboot from Hard Drive C"
 
@@ -145,8 +145,8 @@ Notice: during the entire process (even after you finish this part), you’d bet
 There are two ways, which is DHCP and static IP, to setup connection between `losalamos` and the other threes machine `alpha`, `beta` and `gamma`. Static IP is easier and safer, so the following step instruction is based on static IP method. If you want to use DHCP, please refer to the instruction below the `Steps` part.
 ### Steps
 
-1. Connect servers physically, through the switch and network adapter ports on each machine. That is, connect the gray ethernet cables from each machine to the switch (small white box at the top corner of the server rack).  
-2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be 
+1. Connect servers physically, through the switch and network adapter ports on each machine. That is, connect the gray ethernet cables from each machine to the switch (small white box at the top corner of the server rack).
+2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be
 ```
     auto eth0
     iface eth0 inet static
@@ -156,7 +156,7 @@ There are two ways, which is DHCP and static IP, to setup connection between `lo
       broadcast 10.0.0.255
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
-You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section. 
+You can find an example [here](https://wiki.debian.org/NetworkConfiguration), in the **Configuring the interface manually** section.
 Attention: comment the keyword `loopback` and `dhcp` if you use static ip method (This is not needed!). `loopback` and `dhcp` are the default keywords which have already been in the files.
 3. (Recommended)Still in the configuration of `losalamos`. Configure the file `/etc/hosts`, using the command line `sudo vim /etc/hosts`. The content would be
 ```
@@ -167,7 +167,7 @@ Attention: comment the keyword `loopback` and `dhcp` if you use static ip method
      10.0.0.5 gamma.pc.cs.cmu.edu gamma
 ```
 This [page](http://linux.die.net/man/5/hosts) can give you more info.
-4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
+4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network.
 5. Modified the above two files similarly in the three slave machines. There are some minor modifications needed to make. The following is an example when configuring `alpha`. Other information refer to the image above.
 When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the command line `sudo vim /etc/network/interfaces`. The content would be
 ```
@@ -180,7 +180,7 @@ When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the comma
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
 The dns-nameservers can be the IP of any DNS service, not necessarily the one provided in the example(which is that of Google). If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
-6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works. 
+6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works.
 7. You should be able to ping each other now using IP.
 
 ### Tips
@@ -195,6 +195,7 @@ ii) Then type the following command:
 iii) Check if [never]
 cat /sys/kernel/mm/transparent_hugepage/enabled
 ```
+4. If you are facing issues with connectivity, check the physical connection carefully to understand which port is considered eth0 and which port is eth1. **DO NOT** assume that eth0 and eth1 for all machines line up in the same column position in the machines.
 
 
 * Using DHCP
@@ -210,7 +211,7 @@ cat /sys/kernel/mm/transparent_hugepage/enabled
 
 ![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
 
-For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them.  
+For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them.
 
 ### Steps
 1. Configure `losalamos`. Input the following command line,
@@ -222,7 +223,7 @@ If the above command lines don't work in your case, please refer to this [HOWTO 
 Attention: `HOWTO WIKI` is not totally same as our case, according to the image above. `eth0` and `eth1` are supposed to be swapped in our case, compared with the examples in the wiki. Don't overthink the command lines in HOWTO WIKI. Just type in the commands, they are not script.
 After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
-You may want to configure the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wrongly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
+You may want to configure the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wrongly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference.
 
 If you block or drop some important ports (i.e., 22, 80, 8080), you might lose the SSH connection or HTTP connection.
 
@@ -246,7 +247,7 @@ To further understand IP tables here are a few good resources:
 3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
 5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`. Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP(10.X.X.X).
-6. Apart from the above mentioned ports, remember to also accept the port for the additional service that is required to be enabled (E.g. port 8088 for Zepplin in our case). 
+6. Apart from the above mentioned ports, remember to also accept the port for the additional service that is required to be enabled (E.g. port 8088 for Zepplin in our case).
 7. The IP tables are stored in memory. You should save their state in case a reboot is required (**Do not** reboot for any reason, if avoidable). [This](http://www.cyberciti.biz/faq/how-do-i-save-iptables-rules-or-settings/) tells you how to do it.
 8. It is also a good idea to keep a backup of your command history, in case you want to repeat what you did earlier, or if you want to figure out at which step you were probably going wrong. This can be done using
 ```bash
@@ -264,6 +265,8 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 * It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
 * **Do not** skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
 1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
+**Note**: The passwordless ssh communication has to be setup between itself and the rest of the 4 hosts(eg:losalamos has to setup the passwordless connection with alpha beta and gamma as well as allow inception into losalamos itself). Copying the same machine’s and other machines id_rsa.pub into the authorized_keys file and replicating that among all the 4 hosts does the trick.
+
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 Follow these steps on all four systems:
@@ -279,7 +282,7 @@ iii) Change the pool of servers:
 server 0.north-america.pool.ntp.org
 server 1.north-america.pool.ntp.org
 server 2.north-america.pool.ntp.org
-server 3.north-america.pool.ntp.org 
+server 3.north-america.pool.ntp.org
 OR
 server 0.us.pool.ntp.org
 server 1.us.pool.ntp.org
@@ -295,6 +298,8 @@ watch ntpq -cpe -cas
 v)
 >> sudo service ntp restart
 ```
+**Note**: You need not wait for the ntp’s configured in individual machines to sync with each other. The ambari installation/setup/cluster install/usage in the later sections don’t fail without the sync.
+
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
 6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
@@ -309,7 +314,7 @@ v)
 	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
 	- The goal is that you can ssh from any one of the four machines to the root of all (including itself) without typing in password manually.
 	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
-	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
+	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account.
 	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
 	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
 	```
@@ -331,7 +336,7 @@ v)
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
 	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
 	- The Ambari Web Console has by default admin/admin as username/password
-	
+
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
 	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
@@ -347,8 +352,9 @@ v)
 * Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
 * Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>` here. It might works.
-* While going through the Ambari Install Wizard, there are several parts you should watch out: 
+* While going through the Ambari Install Wizard, there are several parts you should watch out:
 	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
+	- Make sure to use the host cleanup file if you see package warnings. But make sure the cleanup file is actually deleting the packages that were requested as warnings during the registration process.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
 	- When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
@@ -392,12 +398,17 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - The output folder of your map reduce program should not exist when executing the jar program.
 - If there's any "permission" problem, try using su (root), or `sudo` in each command;
 - Remember that in MapReduce 2.0, you should use the command `yarn` but not `hadoop`.
-- If you have trouble running your wordcount program, you may need to install the Java Jre before. You can choose the default one. 
+- If you have trouble running your wordcount program, you may need to install the Java Jre before. You can choose the default one.
 - If you have already run the wordcount program successfully and want to run it again, make sure to remove two things. The first one is the output folder. Using hdfs 'dfs -rm -r StartsWithCount/output'. And anther one is the previous version's result. Or you may meet problems say 'File exits'.
 - If you meet some problems when you try to compile the java files, you might meet some errors. You might need to install or import some libraries. You do not need to reinstall the cluster.
+- Make sure to take screenshots of your process since the nodes might fail at any time during the demo if the cluster has been up for some time. 
+- Create a new user (mandatory) in the Ambari browser interface by clicking the current user name on the top right → Manage Ambari → Users and Groups and give it Admin access, you will need to use this user since Hadoop does not recognize the other ubuntu users as true admins and you will face issues with accessing the Hadoop filesystem. 
+- The files in the link for wget are no longer active. You can copy the content and host the same into a repo to access and perform the wget steps[Job, Mapper and Reducer]
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
+- Make sure you have correctly identified which ethernet port maps to eth0 and which maps to eth1.
+- Do not make temporary changes to your environment variables. It leads to complications later on. Use /etc/profile to push all of your environment variables changes.
 - You should down/up network adapters or reboot machines to make your network configurations work;
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
@@ -406,6 +417,9 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
 - **Do not** reboot losalamos after installing the OS. If you reboot the losalamos after install the ulimit and lose ssh and net connection, you don't need to restart all the machine. Just the losalamos. Install it from the beginning.
+- If you see failures in service setup during cluster creation, specifically saying couldnt find heartbeat to the host, go back to step 3 to make sure the hosts are still active and can be registered without issues. If not try to recreate the cluster using below steps. 
+- If you observe package warnings during host registration, use the hostCleanup.py script as prompted repeatedly on the host until you see a message saying that the package has been selected for cleaning. (May need to do this more than 5-6 times)
+- Check if the required package has been cleaned from the host after every trial just in case the purge message is not getting displayed due to some other reason.
 - Edit this instruction file with carefulness, wrong tips can lead to a huge waste of time of other people.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
@@ -419,7 +433,9 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 3. Reset Ambari Server `sudo ambari-server reset`
 4. Start Ambari Server again `sudo ambari-server start`
 5. Login to Ambari webpage and create the cluster
-
+If you want to recreate the cluster again and cant do it with the above steps. Use this link instead(**Do not** follow the install/reinstall steps just the removal steps will do). Use apt-get instead of yum for ubuntu. 
+https://community.hortonworks.com/questions/1110/how-to-completely-remove-uninstall-ambari-and-hdp.html
+If you get messages saying it cant delete some file and that file is still present in ur system, add a line to the above script and force remove these types of files using `rm -rf`.
 
 If you can't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
 
