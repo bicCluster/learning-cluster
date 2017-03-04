@@ -102,8 +102,12 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 1. burn by command `dd` [[ref]](http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-mac-osx)
 2. burn by UNetbootin [[ref]](http://unetbootin.github.io/) Please update if there are methods that work. A convenient method is to install Ubuntu from CD (the CD is already provided, you can find it near the machines).
 
+Imp Note*: Check all physical connections before starting the setup.
+           Go through all the steps before starting installation because the steps mentioned below can come in any order while installing.
+
 ###Bullet points when installation
 Before installation, makesure the monitor and keyboard are connected to the correct machine, otherwise you can't successfully install the system.
+
 1. Insert the disk and press the power button to turn-off the machine. The lights on the machine should turn-off after a few seconds. Then press the pwer button again to start the machine.
 2. Once the machine starts, press F11 to enter Boot menu. Select `boot from disk` (`IDE CD-ROM device`) option.
 3. Select the `Install Ubuntu Server` option.
@@ -273,10 +277,12 @@ Ambari is a automatical deploy system for Hadoop. [Link to installation]( http:/
 For setup, configure and deploy parts, you may also refer to [This](http://blog.phaisarn.com/node/1391) and [This](https://hadoopjournal.wordpress.com/2015/08/09/hortonworks-hadoop-installation-using-apache-ambari-on-centos6/).
 
 ### Tips
+If the wget command throws a "request timeout" error, just download the tar file manually and install by continuing the steps mentioned above in pdf.
+
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
 * It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
 * **Do not** skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
-1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
+1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips (Imp Note**: To get the two way passwordless ssh communication between the 4 host(alpha beta, gamma and losalamos) copy both id_rsa and id_rsa.pub in all the 4 hosts.)
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 Follow these steps on all four systems : 
@@ -476,6 +482,14 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 3. Reset Ambari Server `sudo ambari-server reset`
 4. Start Ambari Server again `sudo ambari-server start`
 5. Login to Ambari webpage and create the cluster
+If you get the below warning while starting ambari server:
+  WARNING: setpgid(xx,x) failed - [Error 13]Permission denied
+Follow the steps given in below mentioned link:
+  https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html
+
+During setting up cluster if the setup fail on some host and the error is host not found:
+Chech the name of the host using hostname -f
+if the name is not as what you gave while setting cluster then change the name using command hostname <name>
 
 
 If you can't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
