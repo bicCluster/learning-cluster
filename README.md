@@ -119,6 +119,12 @@ Before installation, makesure the monitor and keyboard are connected to the corr
 13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
 14. Install the GRUB boot loader to the master boot record? Choose `YES`.
 15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
+16. Write changes to disks? Select `Yes`
+17. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+18. HTTP proxy information? `Continue` with blank
+19. How do you want to manage upgrades on this system? `Install security updates automatically`
+20. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
+21. Install the GRUB boot loader to the master boot record? Choose `YES`.
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
