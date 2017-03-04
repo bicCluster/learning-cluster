@@ -13,6 +13,8 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 * [Pitfalls](#pitfall)
 * [How to Re-create the Cluster](#recreate-cluster)
 * [Basic Network Troubleshooting](#troubleshoot)
+* [Problems met by previous groups and solutions](#prevprobs)
+
 
 ## You may want to bring ear plugs to the machine lab, as you will be working next to a rack server for a couple of hours. Once you are able to ssh into your cluster, you can access them from outside the lab.
 
@@ -450,7 +452,7 @@ All your are doing is going either up or down the network model layers.
 * `iptables -L -v` Check current valid rule in iptable
 * `scp` Please refer to [Here](http://www.hypexr.org/linux_scp_help.php)
 
-Problems met by previous groups and solutions
+# <a name="prevprobs">Problems met by previous groups and solutions</a>
 
 ##Problems we have:
 1. After installing the os and when we were rebooting the machines, we cannot successfully reboot it because the default boot option is to boot from network. We solve it by changing the booting option to `boot from hard drive C`from the boot menu.
