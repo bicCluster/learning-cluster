@@ -163,7 +163,8 @@ Notice: during the entire process (even after you finish this part), you’d bet
 There are two ways, which is DHCP and static IP, to setup connection between `losalamos` and the other threes machine `alpha`, `beta` and `gamma`. Static IP is easier and safer, so the following step instruction is based on static IP method. If you want to use DHCP, please refer to the instruction below the `Steps` part.
 ### Steps
 
-1. Connect servers physically, through the switch and network adapter ports on each machine. That is, connect the gray ethernet cables from each machine to the switch (small white box at the top corner of the server rack).  
+
+1. Connect servers physically, through the switch and network adapter ports on each machine. That is, connect the gray ethernet cables from each machine to the switch (small white box at the top corner of the server rack).
 2. Start from the `losalamos`. Configure `eth0` in the file `/etc/network/interfaces`, using the command line `sudo vim /etc/network/interfaces`. The content would be
 ```
     auto eth0
@@ -212,7 +213,9 @@ ii) Then type the following command:
 iii) Check if [never]
 cat /sys/kernel/mm/transparent_hugepage/enabled
 ```
-4. One really useful hack to speed up the entire subnetting process is to initially load the final `/etc/hosts` and `/etc/network/interfaces` files for *alpha, beta, gamma and losalamos* in folders on a pen drive. This can then be mounted on a disk(refer to [link](http://askubuntu.com/questions/37767/how-to-access-a-usb-flash-drive-from-the-terminal-how-can-i-mount-a-flash-driv)) and the files directly copied. This prevents bugs while typing and setting up these files.
+4. If you are facing issues with connectivity, check the physical connection carefully to understand which port is considered eth0 and which port is eth1. **DO NOT** assume that eth0 and eth1 for all machines line up in the same column position in the machines.
+5. One really useful hack to speed up the entire subnetting process is to initially load the final `/etc/hosts` and `/etc/network/interfaces` files for *alpha, beta, gamma and losalamos* in folders on a pen drive. This can then be mounted on a disk(refer to [link](http://askubuntu.com/questions/37767/how-to-access-a-usb-flash-drive-from-the-terminal-how-can-i-mount-a-flash-driv)) and the files directly copied. This prevents bugs while typing and setting up these files.
+
 
 * Using DHCP
 
@@ -227,7 +230,7 @@ cat /sys/kernel/mm/transparent_hugepage/enabled
 
 ![iptables](http://www.system-rescue-cd.org/images/dport-routing-02.png)
 
-For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them.  
+For now, the machines in the subnet are unable to connect the real internet. This is because the gateway does not forward their tcp/udp requests to the outside world. Thus we use `iptables` to tell gateway forwarding them.
 
 ### Steps
 1. Configure `losalamos`. Input the following command line,
@@ -282,6 +285,7 @@ If the wget command throws a "request timeout" error, just download the tar file
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
 * It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
 * **Do not** skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
+
 1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips (Imp Note**: To get the two way passwordless ssh communication between the 4 host(alpha beta, gamma and losalamos) copy both id_rsa and id_rsa.pub in all the 4 hosts.)
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
@@ -300,7 +304,7 @@ iii) Change the pool of servers:
 server 0.north-america.pool.ntp.org
 server 1.north-america.pool.ntp.org
 server 2.north-america.pool.ntp.org
-server 3.north-america.pool.ntp.org 
+server 3.north-america.pool.ntp.org
 
 OR (pick one of these sets, and don't type OR in your file)
 
@@ -320,6 +324,8 @@ use cmd/ctrl + C to stop the watch process
 v)
 >> sudo service ntp restart
 ```
+**Note**: You need not wait for the ntp’s configured in individual machines to sync with each other. The ambari installation/setup/cluster install/usage in the later sections don’t fail without the sync.
+
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
 6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask. Make sure selinux-utils is installed first: `apt-get install selinux-utils`.
@@ -365,7 +371,6 @@ v)
 	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
 	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
 	- The Ambari Web Console has by default admin/admin as username/password
-	
 
 * If you come accross failure in registering four machines, check:
 	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
@@ -381,9 +386,12 @@ v)
 * While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
 * Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
-* Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>`, or simply `source <filename>`, without `sudo`. It might work.
-* While going through the Ambari Install Wizard, there are several parts you should watch out: 
+
+* Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>` here. It might works.
+* While going through the Ambari Install Wizard, there are several parts you should watch out:
+
 	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
+	- Make sure to use the host cleanup file if you see package warnings. But make sure the cleanup file is actually deleting the packages that were requested as warnings during the registration process.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
 	- When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
 	- When install extra service, you should not omit the warning. You need to handle it one by one.
@@ -457,10 +465,16 @@ you can refer to [this](http://hortonworks.com/hadoop-tutorial/using-commandline
 - If you have trouble running your wordcount program, you may need to install the Java Jre before. You can choose the default one.
 - If you have already run the wordcount program successfully and want to run it again, make sure to remove two things. The first one is the output folder. Using hdfs 'dfs -rm -r StartsWithCount/output'. And anther one is the previous version's result. Or you may meet problems say 'File exits'.
 - If you meet some problems when you try to compile the java files, you might meet some errors. You might need to install or import some libraries. You do not need to reinstall the cluster.
+- Make sure to take screenshots of your process since the nodes might fail at any time during the demo if the cluster has been up for some time. 
+- Create a new user (mandatory) in the Ambari browser interface by clicking the current user name on the top right → Manage Ambari → Users and Groups and give it Admin access, you will need to use this user since Hadoop does not recognize the other ubuntu users as true admins and you will face issues with accessing the Hadoop filesystem. 
+- The files in the link for wget are no longer active. You can copy the content and host the same into a repo to access and perform the wget steps[Job, Mapper and Reducer]
 - Go to `/usr/hdp/<version number>/hadoop` to confirm the path and version number of hadoop to compile your java files.
+
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
+- Make sure you have correctly identified which ethernet port maps to eth0 and which maps to eth1.
+- Do not make temporary changes to your environment variables. It leads to complications later on. Use /etc/profile to push all of your environment variables changes.
 - You should down/up network adapters or reboot machines to make your network configurations work;
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
@@ -469,6 +483,9 @@ you can refer to [this](http://hortonworks.com/hadoop-tutorial/using-commandline
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
 - **Do not** reboot losalamos after installing the OS. If you reboot the losalamos after install the ulimit and lose ssh and net connection, you don't need to restart all the machine. Just the losalamos. Install it from the beginning.
+- If you see failures in service setup during cluster creation, specifically saying couldnt find heartbeat to the host, go back to step 3 to make sure the hosts are still active and can be registered without issues. If not try to recreate the cluster using below steps. 
+- If you observe package warnings during host registration, use the hostCleanup.py script as prompted repeatedly on the host until you see a message saying that the package has been selected for cleaning. (May need to do this more than 5-6 times)
+- Check if the required package has been cleaned from the host after every trial just in case the purge message is not getting displayed due to some other reason.
 - Edit this instruction file with carefulness, wrong tips can lead to a huge waste of time of other people.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
@@ -482,6 +499,10 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 3. Reset Ambari Server `sudo ambari-server reset`
 4. Start Ambari Server again `sudo ambari-server start`
 5. Login to Ambari webpage and create the cluster
+
+If you want to recreate the cluster again and cant do it with the above steps. Use this link instead(**Do not** follow the install/reinstall steps just the removal steps will do). Use apt-get instead of yum for ubuntu. 
+https://community.hortonworks.com/questions/1110/how-to-completely-remove-uninstall-ambari-and-hdp.html
+If you get messages saying it cant delete some file and that file is still present in ur system, add a line to the above script and force remove these types of files using `rm -rf`.
 If you get the below warning while starting ambari server:
   WARNING: setpgid(xx,x) failed - [Error 13]Permission denied
 Follow the steps given in below mentioned link:
@@ -490,7 +511,6 @@ Follow the steps given in below mentioned link:
 During setting up cluster if the setup fail on some host and the error is host not found:
 Chech the name of the host using hostname -f
 if the name is not as what you gave while setting cluster then change the name using command hostname <name>
-
 
 If you can't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
 
@@ -515,6 +535,7 @@ All your are doing is going either up or down the network model layers.
 
 # <a name="prevprobs">Problems met by previous groups and solutions</a>
 
+
 ##Problems we have:
 1. After installing the os and when we were rebooting the machines, we cannot successfully reboot it because the default boot option is to boot from network. We solve it by changing the booting option to `boot from hard drive C`from the boot menu.
 2. Shutting down losalamos is really really prone to damage its network settings and we could not fix it using port operation. Only reinstalling the system can fix it.
@@ -529,3 +550,4 @@ The NameNode, namely losalamos in our configuration, stores all the metadata suc
 The DataNodes in our configuration are the three slave machines to actually store the data and process read and write request.
 The Jobtracker functions as the resource management and gives orders to the Tasktracker. The Tasktracker in turn follows the order of the Jobtracker and update the Jobtracker with its progress status.
 The client issues a job request on losalamos(the NameNode and the client), and the job is divided into several task and process the data resides on the DataNodes.
+
