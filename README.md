@@ -195,7 +195,6 @@ ii) Then type the following command:
 iii) Check if [never]
 cat /sys/kernel/mm/transparent_hugepage/enabled
 ```
-4. If you are facing issues with connectivity, check the physical connection carefully to understand which port is considered eth0 and which port is eth1. **DO NOT** assume that eth0 and eth1 for all machines line up in the same column position in the machines.
 
 
 * Using DHCP
@@ -264,9 +263,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
 * It's better to follow the Official installation document. Link has been given above. But for the password-less SSH setting, the links behind in the tips are more detailed(although basically they are the same), you may get puzzled follow the official document.
 * **Do not** skip the 1.4 “Prepare the Environment” for the sake of less possible problems in the later installation process:
-1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips 
-**Note**: The passwordless ssh communication has to be setup between itself and the rest of the 4 hosts(eg:losalamos has to setup the passwordless connection with alpha beta and gamma as well as allow inception into losalamos itself). Copying the same machine’s and other machines id_rsa.pub into the authorized_keys file and replicating that among all the 4 hosts does the trick.
-
+1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 Follow these steps on all four systems:
@@ -298,8 +295,6 @@ watch ntpq -cpe -cas
 v)
 >> sudo service ntp restart
 ```
-**Note**: You need not wait for the ntp’s configured in individual machines to sync with each other. The ambari installation/setup/cluster install/usage in the later sections don’t fail without the sync.
-
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
 6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
@@ -311,36 +306,36 @@ v)
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 
 * You need to set up password-less SSH during the process:
-        - Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
-        - The goal is that you can ssh from any one of the four machines to the root of all (including itself) without typing in password manually.
-        - Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
-        - One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
-        - The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
-        - A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
-        ```
-        1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
-        2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-        3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-        4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
-        5. ssh root@B
-        ```
-        Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
-        - Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
-        - Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
-        - The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
-        - You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
-        - If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
-        - Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
-        - If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
-        - You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
-        - When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
-        - Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
-        - The Ambari Web Console has by default admin/admin as username/password
-        
+	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
+	- The goal is that you can ssh from any one of the four machines to the root of all (including itself) without typing in password manually.
+	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
+	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
+	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
+	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
+	```
+	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
+	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+	3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+	4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
+	5. ssh root@B
+	```
+	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
+	- Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
+	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
+	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
+	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
+	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
+	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
+	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
+	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
+	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
+	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
+	- The Ambari Web Console has by default admin/admin as username/password
+	
 * If you come accross failure in registering four machines, check:
-        - If you set the ssh correctly, and can login in other machine from root@losalamos without password.
-        - Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
-        - All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
+	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
+	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
+	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
 * Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
 * The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
 * You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and you only need to install `ambari-agent` on three innet machine,
@@ -353,12 +348,11 @@ v)
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
 * Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>` here. It might works.
 * While going through the Ambari Install Wizard, there are several parts you should watch out: 
-        - Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
-	- Make sure to use the host cleanup file if you see package warnings. But make sure the cleanup file is actually deleting the packages that were requested as warnings during the registration process.
-        - When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
-        - When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
-        - When install extra service, you should not omit the warning. You need to handle it one by one.
-        - Restart the service before runing Demo
+	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
+	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
+	- When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
+	- When install extra service, you should not omit the warning. You need to handle it one by one.
+	- Restart the service before runing Demo
 * You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
 * Select default setting when installing Ambari Server.
 * During installation, the setup may prompt a warning related to increasing the heap size. Go to the previous page and make all the required changes. On clicking `Next`, the same warning will be shown again. Do not worry about it and proceed to the next step.
@@ -401,14 +395,9 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - If you have trouble running your wordcount program, you may need to install the Java Jre before. You can choose the default one. 
 - If you have already run the wordcount program successfully and want to run it again, make sure to remove two things. The first one is the output folder. Using hdfs 'dfs -rm -r StartsWithCount/output'. And anther one is the previous version's result. Or you may meet problems say 'File exits'.
 - If you meet some problems when you try to compile the java files, you might meet some errors. You might need to install or import some libraries. You do not need to reinstall the cluster.
-- Make sure to take screenshots of your process since the nodes might fail at any time during the demo if the cluster has been up for some time. 
-- Create a new user (mandatory) in the Ambari browser interface by clicking the current user name on the top right → Manage Ambari → Users and Groups and give it Admin access, you will need to use this user since Hadoop does not recognize the other ubuntu users as true admins and you will face issues with accessing the Hadoop filesystem. 
-- The files in the link for wget are no longer active. You can copy the content and host the same into a repo to access and perform the wget steps[Job, Mapper and Reducer]
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
-- Make sure you have correctly identified which ethernet port maps to eth0 and which maps to eth1.
-- Do not make temporary changes to your environment variables. It leads to complications later on. Use /etc/profile to push all of your environment variables changes.
 - You should down/up network adapters or reboot machines to make your network configurations work;
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
@@ -417,10 +406,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
 - **Do not** reboot losalamos after installing the OS. If you reboot the losalamos after install the ulimit and lose ssh and net connection, you don't need to restart all the machine. Just the losalamos. Install it from the beginning.
-- If you see failures in service setup during cluster creation, specifically saying couldnt find heartbeat to the host, go back to step 3 to make sure the hosts are still active and can be registered without issues. If not try to recreate the cluster using below steps. 
-- If you observe package warnings during host registration, use the hostCleanup.py script as prompted repeatedly on the host until you see a message saying that the package has been selected for cleaning. (May need to do this more than 5-6 times)
-Check if the required package has been cleaned from the host after every trial just in case the purge message is not getting displayed due to some other reason.
-- Edit this instruction file carefully, wrong tips can lead to a huge waste of time of other people.
+- Edit this instruction file with carefulness, wrong tips can lead to a huge waste of time of other people.
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
@@ -433,9 +419,7 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 3. Reset Ambari Server `sudo ambari-server reset`
 4. Start Ambari Server again `sudo ambari-server start`
 5. Login to Ambari webpage and create the cluster
-If you want to recreate the cluster again and cant do it with the above steps. Use this link instead(**Do not** follow the install/reinstall steps just the removal steps will do). Use apt-get instead of yum for ubuntu. 
-https://community.hortonworks.com/questions/1110/how-to-completely-remove-uninstall-ambari-and-hdp.html
-If you get messages saying it cant delete some file and that file is still present in ur system, add a line to the above script and force remove these types of files using `rm -rf`.
+
 
 If you can't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
 
@@ -457,6 +441,5 @@ All your are doing is going either up or down the network model layers.
 * `ifconfig`: Tell you everything about the network interface
 * `iptables -L -v` Check current valid rule in iptable
 * `scp` Please refer to [Here](http://www.hypexr.org/linux_scp_help.php)
-
 
 
