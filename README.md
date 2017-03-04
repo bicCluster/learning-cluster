@@ -16,7 +16,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 * [Problems met by previous groups and solutions](#prevprobs)
 
 
-## You may want to bring ear plugs to the machine lab, as you will be working next to a rack server for a couple of hours. Once you are able to ssh into your cluster, you can access them from outside the lab.
+## You may want to bring ear plugs to the machine lab, as you will be working next to a rack server for a couple of hours. Once you are able to ssh into your cluster, you can access them from outside the lab. When encountering a problem, look for tips in this wiki first to save time. If this wiki did not resolve your problem, consult the official Ambari documentation next, then Google. Remember to amend this wiki with your solution afterwards.
 
 # <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
@@ -285,8 +285,10 @@ iii) Change the pool of servers:
 server 0.north-america.pool.ntp.org
 server 1.north-america.pool.ntp.org
 server 2.north-america.pool.ntp.org
-server 3.north-america.pool.ntp.org
-OR
+server 3.north-america.pool.ntp.org 
+
+OR (pick one of these sets, and don't type OR in your file)
+
 server 0.us.pool.ntp.org
 server 1.us.pool.ntp.org
 server 2.us.pool.ntp.org
@@ -297,6 +299,8 @@ server losalamos.pc.cs.cmu.edu prefer iburst
 
 iv)
 watch ntpq -cpe -cas
+
+use cmd/ctrl + C to stop the watch process
 
 v)
 >> sudo service ntp restart
@@ -317,15 +321,23 @@ v)
 	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
 	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account.
 	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
-	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
+	
+    - A ***MUCH EASIER*** way to achieve password-less SSH from server A to server B (under root account) would be:
 	```
 	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
 	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 	3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
 	4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
-	5. ssh root@B
+	
 	```
 	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
+    
+    - When running the above script on a machine for the first time, it will prompt for a passphrase. Leave it blank.
+    - When running the above script on a machine for the second/third/etc. time, it will ask whether to erase the existing id_rsa. DON'T.
+    - To save time, the commands above could be saved to a .sh script file then run through the command line. Change `B` to the desired machine name before running.
+    - To run a .sh script, first run the command `chmod +x <filename>.sh` to give it permission. Then run `./<filename>.sh`
+    - After you've run the commands, run `ssh root@B` to confirm that password-less SSH has been correctly set up between the two machines.
+    - Run the above commands on each machine to set up password-less SSH with the other three. For example, when on losalamos, you want to run the script three times with `B` as alpha, beta, and gamma each time. Use scp to transfer the script file between machines to save time.
 
 	- Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
 	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
@@ -354,8 +366,8 @@ v)
 * While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
 * Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
-* Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>` here. It might works.
-* While going through the Ambari Install Wizard, there are several parts you should watch out:
+* Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>`, or simply `source <filename>`, without `sudo`. It might work.
+* While going through the Ambari Install Wizard, there are several parts you should watch out: 
 	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
 	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
 	- When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
@@ -394,6 +406,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 ### Tips
 
 - If you meet any permission problem of `hdfs`, check [this](http://stackoverflow.com/a/20002264/2580825) or try using `sudo`.
+- If you encounter `hdfs user not in sudoer file`, use the command `sudo usermod -aG sudo,adm hdfs` as the root user to give the hdfs user account sudo access.
 - Make sure the file paths provided will creating the jar and running are correct.
 - Log in through SSH to `losalamos` and perform all you tests here since this server should be the only interface;
 - Switch to other Hadoop users (ex. hdfs, but you can still create a new one) and upload or create your files on HDFS;
@@ -405,6 +418,7 @@ you can refer to [this](http://hortonworks.com/hadoop-tutorial/using-commandline
 - If you have trouble running your wordcount program, you may need to install the Java Jre before. You can choose the default one.
 - If you have already run the wordcount program successfully and want to run it again, make sure to remove two things. The first one is the output folder. Using hdfs 'dfs -rm -r StartsWithCount/output'. And anther one is the previous version's result. Or you may meet problems say 'File exits'.
 - If you meet some problems when you try to compile the java files, you might meet some errors. You might need to install or import some libraries. You do not need to reinstall the cluster.
+- Go to `/usr/hdp/<version number>/hadoop` to confirm the path and version number of hadoop to compile your java files.
 
 # <a name="pitfall">Pitfalls you should pay attention to</a>
 - Make sure the physical connection is correct;
