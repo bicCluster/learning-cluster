@@ -48,7 +48,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Primary Name Node and Data Nodes should be on separate machines. (3')
 - Primary Name Node and Secondary Name Nodes (there can be only one Secondary Name Nodes) should be on separate machines. (3')
 - NAT test, get google home page on other three machines. (3')
-- Strong Password, password including at least a number and a letter and longer than 6 characters (3')
+- Strong Password, password including at least a number and a letter and longer than 6 charactersno. This is a strict criteria, and not following it will result in a zero score. (3')
 - No Alert in Ambari. (1' each alert, 2' max)
 
 ### Minimum Iptables
