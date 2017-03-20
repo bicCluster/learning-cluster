@@ -361,7 +361,7 @@ v)
     - Run the above commands on each machine to set up password-less SSH with the other three. For example, when on losalamos, you want to run the script three times with `B` as alpha, beta, and gamma each time. Use scp to transfer the script file between machines to save time.
 
 	- Be careful when you copy paste the command line from the official guide, there might be extra whitespaces due to pdf format. So double check before running the command.
-	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command `sudo passwd`
+	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command `sudo passwd root`, openssh as default doesn't allow root to ssh, so you also need to modify `/etc/ssh/sshd_config`, change `PermitRootLogin without-password` to `PermitRootLogin yes`, after this, restart ssh service using `service ssh restart`.
 	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
 	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
 	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
