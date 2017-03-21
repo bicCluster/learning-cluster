@@ -545,6 +545,12 @@ We use the command:
 ```
 hdfs dfs -chmod 777 /user
 ```
+If the above command doesn't work, try at first list hdfs folders under root `/`. For specific folder that you want to modify(`mkdir` the `input` folder for the job under `/user/`), see the owner of it, and then `su [owner of that folder]`. Before doing switch user(`su`), you need to reset the owner's password, since you can `su root` to the root account, so you can `passwd [user]` to change any user's password. You're good to go after these steps.
+
+Note: 
+- Even root user cann't modify anything on hdfs so if you need transfer anything to the cluster `losalamos` you'd better directly `scp` your files to `hdfs` or other user that has the permission to modify hdfs, then execute them.
+- To compile successfully, you need to specify the correct `JAVA_HOME`, if you face 'Class not found' issue, think about the previlege of the user account you're currenly using to execute the job.
+
 ## How the demo works:
 The NameNode, namely losalamos in our configuration, stores all the metadata such as to manage the namespace and regulate the mapping rule.
 The DataNodes in our configuration are the three slave machines to actually store the data and process read and write request.
