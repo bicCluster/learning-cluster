@@ -551,3 +551,8 @@ The DataNodes in our configuration are the three slave machines to actually stor
 The Jobtracker functions as the resource management and gives orders to the Tasktracker. The Tasktracker in turn follows the order of the Jobtracker and update the Jobtracker with its progress status.
 The client issues a job request on losalamos(the NameNode and the client), and the job is divided into several task and process the data resides on the DataNodes.
 
+## Another suggestion ##
+If you have problem with innet connection, make sure the cables are connected to correct eth#. 
+If you cannot ping from slave nodes, make sure setting ipforwarding rules as 'root' account.
+	- if you don't set proper rules, you won't be able to get internet access from slave nodes.
+	- Make sure you install ambari-agent to all 4 nodes. (apt-get install ambari-agent).
