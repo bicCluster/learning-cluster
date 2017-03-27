@@ -34,6 +34,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Make a clear demonstration on how you demo runs. For example, in a wordcount demo, you can describe how NameNode, DataNode, Jobtracker, Tasktracker (or container in YARN) work together to run this demo.
 - Improve the sections of the previous wiki which are ambiguous.
 - Less than 10 lines of wiki added/Modified, or simple modification makes no sense.
+- Since most content has already been covered by earlier groups, you can install and set up an external library or tool along with a demo to earn bonus points. Like, installing Cassandra, Spark, etc. or any others that have not been installed before by the class, as per your wish. You should mention that in the email to the TAs when you're done with the cluster setup.
 
 ## Self designed demo with scripts to run without any intervention (15')
 - Beyond expectation, test some points that TA would not think of, and make a perfect explanation on how the demo runs. (15')
