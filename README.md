@@ -433,10 +433,11 @@ Before you run the test program, make sure you know where the hadoop is installe
 
 1. Create a input directory under the user of `hdfs`(use command `su hdfs`)
 2. Write the test MapReduce program (eg. wordcount)
-3. Compile the java files to class files with `javac` and archive the class files into `jar`
+3. Compile the java files to class files with `hadoop com.sun.tools.javac.Main Main.java` and archive the class files into `jar` with `jar cf main.jar Main*.class`
 4. Use command `yarn` to run the project and remember to set the output directory of your project or you will hard to find it
 5. Run the program under the user `hdfs` (HADOOP_USER_NAME=hdfs). Use command: `yarn jar WordCount.jar WordCount input_path output_path`
 6. If you want to move the files to HDFS via Ambari UI, you could follow the steps mentioned [here](https://developer.ibm.com/hadoop/blog/2015/10/22/browse-hdfs-via-ambari-files-view/). Also, it is better to create a separate user 'hdfs' instead of 'admin' in Ambari if you follow this approach and give it root permissions in Ambari.
+7. If you want to see your logs for your MapReduce/Yarn job, you can use ssh port fowarding. Your datanode may not be losalamos so you need first `ssh -L 8088:beta:8088 -L 19888:beta:19888 -L 50070:beta:50070 -L 50090:beta:50090 beta`(replace beta with your datanode) on losalamos, then forward above ports to your localhost using `ssh -L 8088:localhost:8088 -L 19888:localhost:19888 -L 50070:localhost:50070 -L 50090:localhost:50090 losalamos` from your laptop. 
 
 ### Demo: KNN
 
