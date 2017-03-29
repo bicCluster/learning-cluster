@@ -1,4 +1,5 @@
 __!!!NO USERNAME, PASSWORD HERE!!!__
+(This means you are expected to erase the existing OS and set your own password.)
 
 * [Hadoop Cluster Requirements](#requirement)
 * [Knowledge Background](#knowledge)
@@ -384,6 +385,7 @@ v)
 * If any/all of the 'target hosts' fail to register, it might be because of the following problems:
         - **Hostname conflict**. Look for errors in the log. If there is a hostname conflict (eg: expecting alpha.pc.cs.cmu.edu but got alpha), you can change the hostname by using the `hostname <name>` command.
         - Misconfiguration of the ambari agents. Remove the ambari installation and try again with a clean slate. (Not for losalamos)
+* When input `Target Hosts` and ssh information at `Install Options`, make sure you can ssh from the server you run ambari-server into target hosts passwordlessly using the user name and private key you provided.
 * While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
 * Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
 * Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
