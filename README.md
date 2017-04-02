@@ -34,6 +34,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 - Make a clear demonstration on how you demo runs. For example, in a wordcount demo, you can describe how NameNode, DataNode, Jobtracker, Tasktracker (or container in YARN) work together to run this demo.
 - Improve the sections of the previous wiki which are ambiguous.
 - Less than 10 lines of wiki added/Modified, or simple modification makes no sense.
+- Since most content has already been covered by earlier groups, you can install and set up an external library or tool along with a demo to earn bonus points. Like, installing Cassandra, Spark, etc. or any others that have not been installed before by the class, as per your wish. You should mention that in the email to the TAs when you're done with the cluster setup.
 
 ## Self designed demo with scripts to run without any intervention (15')
 - Beyond expectation, test some points that TA would not think of, and make a perfect explanation on how the demo runs. (15')
@@ -182,7 +183,8 @@ Attention: comment the keyword `loopback` and `dhcp` if you use static ip method
      127.0.0.1 localhost
      10.0.0.2 losalamos.pc.cs.cmu.edu losalamos
      10.0.0.3 alpha.pc.cs.cmu.edu alpha
-     10.0.0.4 beta.pc.cs.cmu.edu beta     10.0.0.5 gamma.pc.cs.cmu.edu gamma
+     10.0.0.4 beta.pc.cs.cmu.edu beta     
+     10.0.0.5 gamma.pc.cs.cmu.edu gamma
 ```
 This [page](http://linux.die.net/man/5/hosts) can give you more info.
 4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network.
@@ -197,6 +199,7 @@ When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the comma
       broadcast 10.0.0.255
       dns-nameservers 8.8.8.8 8.8.4.4
 ```
+tips: the address of beta and gamma need to be changed corresponding to the content above.
 The dns-nameservers can be the IP of any DNS service, not necessarily the one provided in the example(which is that of Google). If you need more help, please refer to [link](https://help.ubuntu.com/14.04/serverguide/network-configuration.html).
 6. For slaves machine, after making the configurations above, remember the configurations will take effect only after 1) you reboot the machine **OR** 2) shut down port using `sudo ifdown eth1` and then restart using `sudo ifup eth1`. Though the command may return error information, it actually works.
 7. You should be able to ping each other now using IP.
@@ -291,9 +294,9 @@ If the wget command throws a "request timeout" error, just download the tar file
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
 Follow these steps on all four systems : 
 
-(Before `i)`, make sure to use `apt-get update` first)
 ```
 i)
+>> sudo apt-get update
 >> sudo apt install ntp
 
 ii)
@@ -334,6 +337,14 @@ v)
 
 * [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]` (No idea why use `[user]`, I use `root` instead of `[root]` and it works). Thus you need to replace it with your system username.
 * While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: ulimit -a
+* The detail process for ulimit. After finish it, you need to exit and ssh back again.
+```
+>> $ sudo vim /etc/security/limits.conf    #open the file in gedit
+>>  *  soft  nofile 9000
+>>  *  hard  nofile 65000
+>> $ sudo vim /etc/pam.d/common-session 	#open the file in gedit
+>> session required pam_limits.so		# add the line in the file
+```
 * Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
 
 * You need to set up password-less SSH during the process:
@@ -345,10 +356,14 @@ v)
 	- Remember to setup passwordless ssh **most importantly** between root users of all 4 machines. The best way to achieve this can be by generating the public key on losalamos@losalamos which can then be transferred to the root@losalamos, then alpha@alpha and root@alpha from there, and so on. To copy from the general user to the root user, simply copy the `/<general_user>/.ssh/id_rsa.pub` to the `/root/.ssh/authorized_keys`. This is crucial and will lead to a failure in a future step unless setup correctly.
     - A ***MUCH EASIER*** way to achieve password-less SSH from server A to server B (under root account) would be:
 	```
+	0. sudo su
 	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
 	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 	3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-	4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
+	4. cat ~/.ssh/id_rsa.pub | ssh root@alpha 'cat >> .ssh/authorized_keys'
+	*f or the other two, do the same thing *
+	5. cat ~/.ssh/id_rsa.pub | ssh root@beta 'cat >> .ssh/authorized_keys'
+	6. cat ~/.ssh/id_rsa.pub | ssh root@gamma 'cat >> .ssh/authorized_keys'
 	
 	```
 	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
@@ -545,11 +560,13 @@ We use the command:
 ```
 hdfs dfs -chmod 777 /user
 ```
+
 If the above command doesn't work, try at first list hdfs folders under root `/`. For specific folder that you want to modify(`mkdir` the `input` folder for the job under `/user/`), see the owner of it, and then `su [owner of that folder]`. Before doing switch user(`su`), you need to reset the owner's password, since you can `su root` to the root account, so you can `passwd [user]` to change any user's password. You're good to go after these steps.
 
 Note: 
 - Even root user cann't modify anything on hdfs so if you need transfer anything to the cluster `losalamos` you'd better directly `scp` your files to `hdfs` or other user that has the permission to modify hdfs, then execute them.
 - To compile successfully, you need to specify the correct `JAVA_HOME`, if you face 'Class not found' issue, think about the previlege of the user account you're currenly using to execute the job.
+
 
 ## How the demo works:
 The NameNode, namely losalamos in our configuration, stores all the metadata such as to manage the namespace and regulate the mapping rule.
