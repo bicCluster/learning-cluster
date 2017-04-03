@@ -267,7 +267,7 @@ To further understand IP tables here are a few good resources:
 
 1. If you cannot ping external resources on the inner machines, you can: 1) check if your server is able to ping outside or not; 2) check if the `dns-nameservers` is set in all four configuration files;(In order to resolve DNS host name you should add dns-nameservers line when you configure etc/network/interfaces on four machines as indicated above, otherwise the inner machine can only ping external IP address.) or 3) check carefully the spelling of your configuration files. 4) check `/etc/sysctl.conf` is well modified.
 2. When setting the iptable protection, make sure you don't block the SSH. Just set the iptable on the `losalamos` according to the iptable minimum requirements table shown above.
-3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accpet the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
+3. When you are setting the iptable protection, if you want to set the REJECT all -- any any anywhere anywhere reject-with icmp-host-prohibited, make sure that you should first accept the port 22 and port 8080, or you may lose the SSH connection. After that, it might become very slow to connect through SSH but it can still use SSH to connect. So do not panic and be patient.
 4. For minimum iptables protection, as you can see in the principle figure above, for the local processes as the host `losalamos`, it seems you can drop some of the PREROUTING, FORWARD, or INPUT. But after attempting, the PREROUTING cannot be changed. Therefore, you can change FORWARD and INPUT for protecting.  After setting, you can also use `nmap losalamos.pc.cs.cmu.edu` and  `nmap losalamos.pc.cs.cmu.edu -Pn` to see the status of the PORT for protecting status checking.
 5. Remember when you use a machine outside cluster to SSH in losalamos, you should try `ssh username@losalamos.pc.cs.cmu.edu`. Do #not# use its subnet IP adress. But inside the cluster, each machine can access another through either domain name or subnet IP(10.X.X.X).
 6. Apart from the above mentioned ports, remember to also accept the port for the additional service that is required to be enabled (E.g. port 8088 for Zepplin in our case).
@@ -276,6 +276,20 @@ To further understand IP tables here are a few good resources:
 ```bash
 history > historyLog
 ```
+9. Additionally, the ports that Ambari uses are the following: 8080(tcp), 8020(tcp), 8040(tcp), 8041(tcp). All of those ports are used in the following way: 8080(tcp) is the port used by default to serve the HTTP Interface of Ambari Web and Ambari REST API. 
+10. Next, the port 8040(tcp) is essential in the process of installation and communication between the Ambari Server and the Ambari Agents, so it is fundamental to keep this port open. As a matter of fact, this port is used by Ambari during the SSL Handshake, which is the process by which the agents download a certificate from the server in order to use a secure channel. 
+11. Regarding to the port 8041(tcp), it has to be a rule in the firewall that opens this port. This is the port used for REGISTRATION and HEARTHBEAT for Ambari Agents to Ambari Server.
+12. Likewise, the port 8020(tcp) has to be opened in the firewall. This port is used by Hadoop to communicate the Namenode with the other servers.
+13. Open the port 50070(tcp), and pay attention to the following table because it also addresses other ports that may be necessary to open depending which server is chosen as the NameNode, SNameNode, or DataNode:
+```
+Daemon                   Default Port  Configuration Parameter
+Namenode                 50070        dfs.http.address
+Datanodes                50075        dfs.datanode.http.address
+Secondarynamenode        50090        dfs.secondary.http.address
+Jobracker                50030        mapred.job.tracker.http.address
+Tasktrackers             50060        mapred.task.tracker.http.address
+```
+14. It is a good practice, in terms of security, to only mantain open the ports that are strictly necessary in order to avoid any databreach. Therefore plan ahead before doing any implementation.
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
@@ -504,7 +518,14 @@ you can refer to [this](http://hortonworks.com/hadoop-tutorial/using-commandline
 - If you see failures in service setup during cluster creation, specifically saying couldnt find heartbeat to the host, go back to step 3 to make sure the hosts are still active and can be registered without issues. If not try to recreate the cluster using below steps. 
 - If you observe package warnings during host registration, use the hostCleanup.py script as prompted repeatedly on the host until you see a message saying that the package has been selected for cleaning. (May need to do this more than 5-6 times)
 - Check if the required package has been cleaned from the host after every trial just in case the purge message is not getting displayed due to some other reason.
-- Edit this instruction file with carefulness, wrong tips can lead to a huge waste of time of other people.
+- Edit this instruction file with carefulness, wrong tips can lead to a huge waste of time of other people. 
+- Additionally, provide a proper, clear, and concise explanation to any new topic that you consider useful for the next teams.
+- After installing any new package, like ntp, update the system because some packages could probably have been modified and they may need to download new dependencies:
+```
+$ sudo apt-get update
+```
+- When planning ahead for the architecture of the solution, the Promary NameNode has to be separated fromthe Secondary NameNode, and the Data Node. However, the Secondary NameNode not necesarily has to be separated from the Data Node.
+
 
 # <a name="recreate-cluster">How to Re-create the Cluster</a>
 In case anything you configured wrong, you might want to rebuild the cluster again. Please follow the below steps.
@@ -542,6 +563,17 @@ If you can't create iptables by following the steps above, you can refer to this
 * Can you ping other local hosts (hosts on the local network) by IP address? How about hostname? (Related command: ping)
 * Can you ping hosts on another network (Internet)? (Related command: ping)
 All your are doing is going either up or down the network model layers.
+* In  general, and in order to troubleshoot properly any issue, try to follow the OSI Model Layer. Go from the lowest layer to the top one: 
+	```
+	Layer 7—Application
+	Layer 6—Presentation
+	Layer 5—Session
+	Layer 4—Transport
+	Layer 3—Network
+	Layer 2—Data Link
+	Layer 1—Physical
+	```
+* If you discard all of the possible reasons by following the previous layers, go to `/var/log/ambari-server/ambari-server.log` and filter any `[Error]`. By reading the logs, you will be abe to identify a reason why Ambari has not been installed, or configured properly.
 
 ## Explanations about several useful command
 
@@ -565,7 +597,8 @@ hdfs dfs -chmod 777 /user
 ```
 
 If the above command doesn't work, try at first list hdfs folders under root `/`. For specific folder that you want to modify(`mkdir` the `input` folder for the job under `/user/`), see the owner of it, and then `su [owner of that folder]`. Before doing switch user(`su`), you need to reset the owner's password, since you can `su root` to the root account, so you can `passwd [user]` to change any user's password. You're good to go after these steps.
-
+5. If during the process of Ambari setup you find any issue like `No route to host`, open the dialog box, and then read the error and look for URL. Inside of this URL you will be able to identify a port that you did not consider at the very beginning. Add that port to your firewall. 
+6. 
 Note: 
 - Even root user cann't modify anything on hdfs so if you need transfer anything to the cluster `losalamos` you'd better directly `scp` your files to `hdfs` or other user that has the permission to modify hdfs, then execute them.
 - To compile successfully, you need to specify the correct `JAVA_HOME`, if you face 'Class not found' issue, think about the previlege of the user account you're currenly using to execute the job.
