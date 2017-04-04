@@ -17,7 +17,7 @@ __!!!NO USERNAME, PASSWORD HERE!!!__
 # <a name="requirement">Hadoop Cluster Requirements</a>
 - OS: CentOS 7/ Ubuntu 14.04
 - Network Structure: NAT, `losalamos` need to be the NAT server. `losalamos` can be connected to the port on wall through "eno2".
-- Install Choice: [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf)
+- Install Choice: [Link to installation](https://docs.hortonworks.com/HDPDocuments/Ambari-2.4.2.0/bk_ambari-installation/bk_ambari-installation-20161128.pdf)
 - You need to install `HDFS`,`MapReduce2 + YARN`, `Ambari Metrics`, and `ZooKeeper` and you must install the package we are currently learning.
 - You must keep a wiki of the necessary steps you think may be helpful to the next group here. Change of the wiki also is part of the grading.
 - You have 3 whole days minus 2h for grading from 1:00 PM the first day to 11:00 AM the last day.
@@ -107,29 +107,28 @@ It may be hard to create a bootable USB stick on mac OS X. Failures occured for 
 7. Encrypt your home directory? Select `No`
 8. Partition method: `Guided - use entire disk` if there is such a choice. If there is multiple partition selections, just take the default one.
 9. Write changes to disks? Select `Yes`
-10. Network configuration. Choose `eth1` when configure `losalamos` and `eth0` (OR `eth1`, both are okay) when configure `alpha`, `beta` and `gamma`. Also, in case of `alpha`, `beta` and `gamma`, the network config will fail. Select `Do not configure netwrok`.
+10. Network configuration. Choose `eth1` as the primary device for `losalamos`, `alpha`, `beta` and `gamma` (`eth0` is not plugged in three slaves). Automatic network configuration will fail for `alpha`, `beta` and `gamma`. Select `Do not configure netwrok`.
 11. HTTP proxy information? `Continue` with blank
 12. How do you want to manage upgrades on this system? `Install security updates automatically`
 13. Choose software to install: Press space on `OpenSSH server` and there is a `*` ensures that you have chosen the software. Then press `Continue`.
 14. Install the GRUB boot loader to the master boot record? Choose `YES`.
 15. Before finishing installation, choose `Yes` for `Set clock to UTC` option  
 16. Unmount partitions that are in use? `YES`
+17. To install OpenSSH server, use `sudo apt-get update; sudo apt-get install openssh-server` .
+18. Then make a back up of your `sshd_config` file by copying it to your home directory, `sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.factory-defaults`  
+19. Then typing `sudo chmod a-w /etc/ssh/sshd_config.factory-defaults`.
+20. Runs the standard text editor in Ubuntu or more recent `sudo restart ssh`
+21. If getting error, “Unable to connect to Upstart”: try  `sudo systemctl restart ssh` You can find detailed OpenSSH tutorial [here](https://help.ubuntu.com/community/SSH/OpenSSH/Configuring).
 
 [Here](https://www.youtube.com/watch?v=P5lMuMhmd4Q) is a step-by-step installation video.
 
 ### Tips
 1. In the image above, the three innet machines' hostname are `alpha`, `beta` and `gamma`. You can change them to whatever you like.
-
 2. Sometimes the system may get stuck when reboots after completing installation, in such rare cases, just press the reboot button on the back of the server for more than 10 seconds and restart the system.
-
 3. During the installation, we need configured network of `losalamos` with eth1 and we don't need to configure the network of three innet machines during the install process. Thus when installing Ubuntu on the three innet machines, you can either chose eth0 or eth1 during network configuration step, and it will eventually show "network auto configuration failed", just ignore and continue.
-
 4. You probably want to install the OpenSSH during installation, so that you can then connect to the server using terminal in your own laptops. If you choose `not to update the server automatically` when you install the server, you might need to install the OpenSSH using `sudo apt-get install openssh-server`. If you still cannot install OpenSSH, please refer to [Here](http://askubuntu.com/questions/318012/openssh-server-package-not-available-on-12-04-2).
-
 5. The openssh-server should be installed on all of the four machines for ssh to function properly, try `apt-get update` before install openssh-server. 
-
 6. `losalamos` should have access to the internet already after installation. Using `ping google.com` or `ping + other known IP address` to check the connection. 
-
 7. You need to choose unmount the disk partition before installation step. Choose the `guided use entire disk`, if there is multiple partition selections, just take the default one. If you get a note like this: "Note that all data on the disk you select will be erased, but not before you confirm that you really want to make changes. Select disk to partition:" and select "SCSI3 (2,0,0) (sda) - 72.7 GB DELL PERC 5/i" 
 
 
@@ -164,7 +163,7 @@ Attention: comment the keyword `loopback` and `dhcp` if you use static ip method
 This [page](http://linux.die.net/man/5/hosts) can give you more info.
 4. When you finished the configuration of `losalamos`, **DO NOT** reboot losalamos. Use `sudo ifdown eth0`, `sudo ifup eth0` and `sudo ifconfig eth0 up` to enable the configuration (Note `eth0` for `losalamos`, not `eth1`! If it returns error information after executing second command, you can ignore it as long as the third command can be executed successfully). Otherwise you may lose your connection to external network. 
 5. Modified the above two files similarly in the three slave machines. There are some minor modifications needed to make. The following is an example when configuring `alpha`. Other information refer to the image above.
-When configure `eth1` in `/etc/network/interfaces` in `alpha`, , using the command line `sudo vim /etc/network/interfaces`. The content would be
+   When configuring `eth1` in `/etc/network/interfaces` in `alpha`, use `sudo vim /etc/network/interfaces`. The content would be
 ```
     auto eth1
     iface eth1 inet static
@@ -209,13 +208,13 @@ For now, the machines in the subnet are unable to connect the real internet. Thi
 
 ### Steps
 1. Configure `losalamos`. Input the following command line,
- `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`
- `sudo iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE`
- `sudo iptables -A FORWARD -i eth1 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT`
- `sudo iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT`
-If the above command lines don't work in your case, please refer to this [HOWTO WIKI](http://www.revsys.com/writings/quicktips/nat.html). If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/).
-Attention: `HOWTO WIKI` is not totally same as our case, according to the image above. `eth0` and `eth1` are supposed to be swapped in our case, compared with the examples in the wiki. Don't overthink the command lines in HOWTO WIKI. Just type in the commands, they are not script.
-After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
+    `sudo bash -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'`
+    `sudo iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE`
+    `sudo iptables -A FORWARD -i eth1 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT`
+    `sudo iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT`
+   If the above command lines don't work in your case, please refer to this [HOWTO WIKI](http://www.revsys.com/writings/quicktips/nat.html). If you want to know more about forwarding, check [this](http://www.howtogeek.com/177621/the-beginners-guide-to-iptables-the-linux-firewall/).
+   Attention: `HOWTO WIKI` is not totally same as our case, according to the image above. `eth0` and `eth1` are supposed to be swapped in our case, compared with the examples in the wiki. Don't overthink the command lines in HOWTO WIKI. Just type in the commands, they are not script.
+   After configuring iptables, all four machines should be able to connect to the Internet now, you can try to ping www.google.com on all four machines to test your configuration.
 
 You may want to configure the iptables to block some incoming traffic and allow access only to particular protocols and ports. [Here](http://developer-should-know.tumblr.com/post/128018906292/minimal-iptables-configuration) is a quick introduction. Use `iptables -L -v` to check current valid rules. In case you wrongly add a certain rule, use `iptable -D [rules]` to delete a cerain rules, check [this](https://www.digitalocean.com/community/tutorials/how-to-list-and-delete-iptables-firewall-rules) for reference. 
 
@@ -250,9 +249,19 @@ history > historyLog
 
 ## <a name="install-hadoop">Install Hadoop using Ambari</a>
 
-Ambari is a automatical deploy system for Hadoop. [Link to installation]( http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.0.0/bk_Installing_HDP_AMB/bk_Installing_HDP_AMB-20151221.pdf).
+Ambari is a automatical deploy system for Hadoop. [Link to installation](https://docs.hortonworks.com/HDPDocuments/Ambari-2.4.2.0/bk_ambari-installation/bk_ambari-installation-20161128.pdf).
 
-For setup, configure and deploy parts, you may also refer to [This](http://blog.phaisarn.com/node/1391) and [This](https://hadoopjournal.wordpress.com/2015/08/09/hortonworks-hadoop-installation-using-apache-ambari-on-centos6/).
+To setup, configure and deploy parts, you may also refer to [This](http://blog.phaisarn.com/node/1391) and [This](https://hadoopjournal.wordpress.com/2015/08/09/hortonworks-hadoop-installation-using-apache-ambari-on-centos6/).
+
+### Installation process overview
+
+1. Set up environment: [manual](https://docs.hortonworks.com/HDPDocuments/Ambari-2.4.2.0/bk_ambari-installation/bk_ambari-installation-20161128.pdf) section 1.4
+
+2. Install ambari-server on master: [manual](https://docs.hortonworks.com/HDPDocuments/Ambari-2.4.2.0/bk_ambari-installation/bk_ambari-installation-20161128.pdf) section 2.1.6
+
+3. Configure cluster through web UI: [manual](https://docs.hortonworks.com/HDPDocuments/Ambari-2.4.2.0/bk_ambari-installation/bk_ambari-installation-20161128.pdf) section 3
+
+   (You may encounter some warnings when verifying system, execute required command and rerun checks. Be sure to modify hosts on each machine.)
 
 ### Tips
 * Go through the “Getting Ready” section to check and configure if you could meet with the basic environment requirements. Take care of part 1.4.
@@ -261,7 +270,7 @@ For setup, configure and deploy parts, you may also refer to [This](http://blog.
 1. Do 1.4.1 Set Up Password-less SSH use links behind in the tips
 2. no need do 1.4.2: there is default account
 3. Do 1.4.3 NTP on all four hosts, there is no ubuntu version command in the official installation document, refer to [here](http://blogging.dragon.org.uk/setting-up-ntp-on-ubuntu-14-04/).
-Follow these steps on all four systems:
+   Follow these steps on all four machines:
 ```
 i)
 >> sudo apt install ntp
@@ -291,77 +300,92 @@ v)
 >> sudo service ntp restart
 ```
 4. no need do 1.4.4: Offitial installation document gives hosts name and network setting on redhat and centOS. for ubuntu, hostname and network are set in etc/network/interfaces already in the "Establish Subnet" process。
+
 5. no need for 1.4.5: detailed iptable setting guide has been given above.
-6. Do 1.4.6 Ubuntu 14 has no selinux pre-installed. Follow the instruction to set umask.
+
+6. Do 1.4.6. Ubuntu 14 has no selinux pre-installed, therefore you don't need to do anything.
+
 7. You can set ulimit at /etc/security/limits.conf, make sure you change the ulimit of the ACCOUNT YOU USE(e.g root) to install Ambari. **Do not** reboot the system when you finish the ulimit installation. If do, you may need to reinstall the machine.
+
 8. You do not need to do the section 1.5 of "Using a Local Repository"
 
-* [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.
-* While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: ulimit -a
-* Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
+   [This](http://posidev.com/blog/2009/06/04/set-ulimit-parameters-on-ubuntu/) will help you when setting `ulimit`. Notice that in this instruction, `user` means `[user]`. Thus you need to replace it with your system username.While using ulimit, and referring to the link in the above tip, do not reboot the system but make sure to log out of all active sessions and then login to see effective changes by using the command: `ulimit -a`
 
-* You need to set up password-less SSH during the process:
-	- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
-	- The goal is that you can ssh from any one of the four machines to the root of all (including itself) without typing in password manually.
-	- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
-	- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
-	- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
-	- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
-	```
-	1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
-	2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-	3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-	4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
-	5. ssh root@B
-	```
-	Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
-	
-	- Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command -'sudo passwd'
-	- The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
-	- You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
-	- If you change the ssh configuration, you may need to restart ssh by `service ssh restart`.
-	- Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
-	- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
-	- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
-	- When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
-	- Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
-	
-* If you come accross failure in registering four machines, check:
-	- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
-	- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
-	- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
-* Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
-* The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
-* You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and you only need to install `ambari-agent` on three innet machine,
-* But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be done through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
-* If any/all of the 'target hosts' fail to register, it might be because of the following problems:
-        - **Hostname conflict**. Look for errors in the log. If there is a hostname conflict (eg: expecting alpha.pc.cs.cmu.edu but got alpha), you can change the hostname by using the `hostname <name>` command.
-        - Misconfiguration of the ambari agents. Remove the ambari installation and try again with a clean slate. (Not for losalamos)
-* While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
-* Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
-* Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
-* Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>` here. It might works.
-* While going through the Ambari Install Wizard, there are several parts you should watch out: 
-	- Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
-	- When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
-	- When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
-	- When install extra service, you should not omit the warning. You need to handle it one by one.
-	- Restart the service before runing Demo
-* You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
-* Select default setting when installing Ambari Server.
-* During installation, the setup may prompt a warning related to increasing the heap size. Go to the previous page and make all the required changes. On clicking `Next`, the same warning will be shown again. Do not worry about it and proceed to the next step.
-* If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
-* Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
-* If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
-* If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
-[this](https://access.redhat.com/solutions/46111). You may first try the following commands to disable THP and see if the problem can be fixed:
+9. Set up the SSH carefully. After this part being done, you can remotely control those four machines with your own laptop. If you did not install OpenSSH during installation, you can install it using `apt-get install openssh-server`. You can only directly SSH into `losalamos` from the outside, but you can SSH into other machines within `losalamos` (like Inception!).
+
+10. You need to set up password-less SSH during the process:
+
+- Overview for password-less SSH: produce a pair of public key and private key on one host, copy the public key to other hosts, then you could visit those hosts without inputting password. It's like give away your public key to others, you have the access to them.
+- The goal is that you can ssh from any one of the four machines to the root of all (including itself) without typing in password manually.
+- Before you try to set up the password-less SSH, you need to enable ssh root access on Ubuntu 14.04. For detailed instructions, please follow the link: http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04
+- One way to achieve password-less SSH is that: for each node, login as root user by su and put the same copy of rsa key pair in the /.ssh directory of root user account. 
+- The other way is: [allow the SSH login root account](http://askubuntu.com/questions/469143/how-to-enable-ssh-root-access-on-ubuntu-14-04) and then follow [this](http://www.linuxproblem.org/art_9.html) steps in four machines (you need to set the pw-less SSH from a root acount in any machine to another root acount of any other machine, so every username in this example should be replaced by root. You may also check next 3 instruction for reference.And be careful that you should still use `ssh-keygen` while generating key pairs, otherwise it could not ssh the root properly later).
+- A much easier way to achieve password-less SSH from server A to server B (under root account) would be:
+```
+1. ssh-keygen -t rsa -f ~/.ssh/id_rsa
+2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+3. chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
+4. cat ~/.ssh/id_rsa.pub | ssh root@B 'cat >> .ssh/authorized_keys'
+5. ssh root@B
+```
+Explaination: The private key is just the key for a server and the pubic key is like a lock that the private key could solve. If you append the public key to the authorized_keys file in the remote server, the private key in current server can match with it automatically and you can ssh to B without password.
+
+11. Ubuntu system has no pre-set password for root user, in order to login as root user, you need to set password first, use command  `sudo passwd`
+12. The manual from Hortonworks have covered the basic steps. You can also check [this](http://askubuntu.com/questions/497895/permission-denied-for-rootlocalhost-for-ssh-connection) if you need more help.
+13. You need to use root permission to set up password-less SSH. To set the root password see [this](http://askubuntu.com/questions/155278/how-do-i-set-the-root-password-so-i-can-use-su-instead-of-sudo).
+14. If you change the ssh configuration, you may need to restart ssh by `sudo service ssh restart`.
+15. Make sure the password-less SSH works in both directions among four machines: scp the private and public key to the .ssh folder of four machines and modify authorized_key file. Sometimes when you reinstall the cluster, you would encounter a problem that you cannot have the remote connection with the correct ssh key. In this time, you can type `chmod 400`+ key name or vim into the file that store the original key to delete the original one.
+
+- If something goes wrong with the password-less SSH, you may get timeout error in building cluster. Then try Installing Ambari Agents Manually, look at [this](https://ambari.apache.org/1.2.0/installing-hadoop-using-ambari/content/ambari-chap6-1.html). For Ubuntu, use apt-get instead of yum.
+
+- You may generate the public key or private key from the user account which is not root, check it carefully or you may not be able to automatically install the hadoop system. The public key and private key is under the file /root/.ssh. .ssh file is invisible file there.
+
+  When input the private key in the Ambari installation, don't forget to include the first line and last line. It is best to just scp the private key of losalamos to your local system and use it by selecting the file from the GUI.
+
+16. Remember to set id_rsa.pub as authroized_keys in the `losalamos` if you want other slave machines to login using `ssh losalamos`.
+
+
+17. If you come accross failures in registering four machines, check:
+
+- If you set the ssh correctly, and can login in other machine from root@losalamos without password.
+- Use the private key: `id_rsa`. Copy this with `scp` to your laptop beforehand. You could use this [link](http://www.hypexr.org/linux_scp_help.php) for reference. Upload the file. Do not copy paste the key from terminal (there might be extra white-spaces or lines added/missing).
+- All machine, /etc/hosts need to have their FQDN inside. Also, according to Install Documentation, check `hostname -f` is return its FQDN.
+- You may meet message telling you to uninstall zlibc. **Don't.** It will remove ambari-agent and you will have to set up the whole machine again. 
+18. Before Install the services, better to carefully handle the warning from the registeration section. Check whether NTP is intalled.If you meet warings when confirms hosts which said ntp services error, you may check whether you have already started up the ntp on each machine, if not, use this command line 'sudo service ntp start'.
+
+19. The services you need to install are `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. Some other services may fail so do not install services that you do not need.
+20. You need to install both `ambari-server` and `ambari-agent` on `losalamos`, and nothing needed for innet machines. 
+21. But if everything goes smoothly, you only have to manually install `ambari-server` on `losalamos`, and everything else can be done through the [Ambari Web](http://losalamos.pc.cs.cmu.edu:8080) in web browser.
+22. If any/all of the 'target hosts' fail to register, it might be because of the following problems:
+    - **Hostname conflict**. Look for errors in the log. If there is a hostname conflict (eg: expecting alpha.pc.cs.cmu.edu but got alpha), you can change the hostname by using the `hostname <name>` command.
+    - Misconfiguration of the ambari agents. Remove the ambari installation and try again with a clean slate. (Not for losalamos)
+23. While installing `ambari-server` on `losalamos`, java 1.8 will be installed with your choice during the process, but you need to configure the environment variables by yourself this [page](http://stackoverflow.com/questions/9612941/how-to-set-java-environment-path-in-ubuntu) will help on your configurations.
+24. Your java directory should be under `/usr/jdk64/`. You can find your $JAVA_HOME path in this directory and carefully set it to your configuration file as the previous instruction indicates.
+25. Remember to use `sudo source /etc/profile` after you modify the environment variables. After that, you should be able to check the version of your java by using `java -version`.
+26. Sometimes you may encounter the problem when you execute the “source command” and the shell may remind you that “command not found: source”. You can try `source –s <filename>` here. It might works.
+27. While going through the Ambari Install Wizard, there are several parts you should watch out: 
+    - Make sure password-less SSH is correctly set up, which will let you SSH from any one of the four machines to other three without typing in password manually. Otherwise if may gave you failure when registering three inner machines.
+    - When choosing services to install, only choose those are required. One safe way to do this is to first install only `HDFS`, `MapReduce2`, `Yarn`, `ZooKeeper` and  `Ambari Metrics`. And go back to install other required services after confirming your hadoop can run correctly by runing a MapReduce task.
+    - When assinging master, name node, data node, go through the `Grading Criteria` in `Requirements` section carefully.
+    - When install extra service, you should not omit the warning. You need to handle it one by one.
+    - Restart the service before runing Demo
+28. You should be aware of that `losalamos` should be one of the clients since it is the only interface to run Hadoop programs from outside.
+29. Select default setting when installing Ambari Server.
+30. During installation, the setup may prompt a warning related to increasing the heap size. Go to the previous page and make all the required changes. On clicking `Next`, the same warning will be shown again. Do not worry about it and proceed to the next step.
+31. If you come across errors when starting the server, Check [ this](https://community.hortonworks.com/articles/16944/warning-setpgid31734-0-failed-errno-13-permission.html).
+32. Once the cluster is installed, make sure [this page](http://losalamos.pc.cs.cmu.edu:8080/#/main/hosts) shows each host has correct IP address (10.0.0.x).s If the IP address is 127.0.0.1 that's not correct, check whether the four `/etc/hosts` files are same with each other. Modify `/etc/hosts` if necessary, then restart both ambari-server and all ambari-clients.
+33. If something goes wrong, check your firewall settings or you may find causes by looking at log files under `/var/log`
+34. If run into Transparent Huge Pages error, check out [this](https://docs.mongodb.org/manual/tutorial/transparent-huge-pages/).
+       [this](https://access.redhat.com/solutions/46111). You may first try the following commands to disable THP and see if the problem can be fixed:
+
 ```
 # echo never > /sys/kernel/mm/transparent_hugepage/enabled
 # echo never > /sys/kernel/mm/transparent_hugepage/defrag
 ```
-* For installing Ambari (except for logging into node for debug), you DON'T need to install python2.6, Ambari is compatible with python2.6 or later version.
-* If you decide to install python yourself, actually for anything, DO NOT use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
-* SName Node and Name node should be on different machines. Data Node and Name Node should be on different machines. Name node(Not SName Node) is the primary Name Node.
+35. For installing Ambari (except for logging into node for debug), you **DON'T** need to install python2.6, Ambari is compatible with python2.6 or later version.
+36. If you decide to install python yourself, actually for anything, **DO NOT** use any personal repository, use official ones. Otherwise it may lead to cluster building failure and probably reinstallation of OS.
+37. SName Node and Name node should be on different machines. Data Node and Name Node should be on different machines. Name node(Not SName Node) is the primary Name Node.
+38. You may meet ambari problems like it cannot start the service or it cannot install some services required during your installation, if you clear your machine, it cannot work. You should **reinstall ubuntu** and start from a **clean system**.
 
 ## <a name="test-mapreduce">Test a MapReduce Program</a>
 
@@ -394,7 +418,7 @@ If everything is green on the dashboard of Ambari, you can follow [this](http://
 - You should down/up network adapters or reboot machines to make your network configurations work;
 - Make sure your configurations are permanent, otherwise they will remain unchanged after reboot, like iptables;
 - Ambari Server should be installed on `losalamos` since it is the only server you can get access to from outside the subnet;
-`losalamos` should also hold a Ambari Agent to be part of the cluster;
+  `losalamos` should also hold a Ambari Agent to be part of the cluster;
 - Keep in mind that `losalamos` should be one of the clients;
 - Make sure you use `ulimit` to change file descriptors limit before installing Ambari, or you may encounter problems in running the cluster.
 - If by any chance you mapped the History Server incorrectly, you can change it using the steps given [here](https://cwiki.apache.org/confluence/display/AMBARI/Move+Mapreduce2+History+Server) instead of re-doing everything.
@@ -407,11 +431,11 @@ In case anything you configured wrong, you might want to rebuild the cluster aga
 ##(Two groups have indicated that the following 5 steps may cause components of ambari not being able to install and the ambari to fail rebooting, so be careful if you need to reconfigure the server)
 1. Stop all services from Ambari first, both in losalamos and 3 slave machines. On slave machines, `sudo ambari-client stop`. On losalamos, do `sudo ambari-client stop` and `sudo ambari-server stop`.
 2. Clean installed services on all four machines
-`python /usr/lib/python2.6/site-packages/ambari_agent/HostCleanup.py`
+   `python /usr/lib/python2.6/site-packages/ambari_agent/HostCleanup.py`
 3. Stop Ambari Server `sudo ambari-server stop`
-3. Reset Ambari Server `sudo ambari-server reset`
-4. Start Ambari Server again `sudo ambari-server start`
-5. Login to Ambari webpage and create the cluster
+4. Reset Ambari Server `sudo ambari-server reset`
+5. Start Ambari Server again `sudo ambari-server start`
+6. Login to Ambari webpage and create the cluster
 
 
 If you can't create iptables by following the steps above, you can refer to this script created by Hsueh-Hung Cheng [Here](https://gist.github.com/xuehung/8859e7162466918aac82), make sure you understand each line of script (it may not work). When you make use of this script, if there is permission denied alert, try to add `sudo` at the head of most of the lines and refer to the tips in Iptables above to modify the rest one.
@@ -425,7 +449,7 @@ If you can't create iptables by following the steps above, you can refer to this
 * Can you ping the localhost? (ping localhost/127.0.0.1)
 * Can you ping other local hosts (hosts on the local network) by IP address? How about hostname? (Related command: ping)
 * Can you ping hosts on another network (Internet)? (Related command: ping)
-All your are doing is going either up or down the network model layers.
+  All you are doing is going either up or down the network model layers.
 
 ## Explanations about several useful command
 
