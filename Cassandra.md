@@ -92,10 +92,10 @@ code](https://gist.github.com/beccam/06c3283e5ee4a480a555) which you can use. Re
   ```cql
 
   CREATE TABLE user(lastname text PRIMARY KEY, 
-                 + age int, 
-                 + city text, 
-                 + email text, 
-                 + firstname text );
+                    age int, 
+                    city text, 
+                    email text, 
+                    firstname text );
   ```
 If the command fails because the table has already exists, then you can use the command below to remove the old User table:
 
@@ -104,7 +104,7 @@ If the command fails because the table has already exists, then you can use the 
   ```
 
 5. You can also use the cqlsh shell to create all the tables and test it on command line. Excellent tutorials are available
-[here](http://www.planetcassandra.org/create-a-keyspace-and-table/), and [here](https://www.tutorialspoint.com/cassandra/cassandra_create_table.htm).
+[here](http://www.planetcassandra.org/create-a-keyspace-and-table/) and [here](https://www.tutorialspoint.com/cassandra/cassandra_create_table.htm).
 
 6. The true power of Cassandra can be observed when you set it up on a multi-node cluster.
 For details, you can check how to initialize a multiple node cluster with [single](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/initializeSingleDS.html) 
