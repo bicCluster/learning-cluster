@@ -59,31 +59,58 @@ In Cassandra, a keyspace is a container for your application data. It is similar
   ```bash
   sudo service cassandra start
   ```
-2. In command line, enter:
+
+  Usually the Cassandra starts automatically, so before you manually start the Cassandra service, you can use the following command to validate:
+
+  ```bash
+  nodetool status
+  ```
+  If you see the information of datacenter, the service has been started.
+
+2. In command line, enter the following command to start the CQL interactive terminal:
 
   ```bash
   cqlsh
   ```
-3. Create Keyspace:
+3. Create Keyspace demo:
 
   ```cql
   CREATE KEYSPACE demo
   WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
   ```
 
+  Check that the keyspace has been successfully created:
+  ```cql
+  SELECT * FROM system.schema_keyspaces;
+  ```
+  You will see keyspace "demo".
+
 4. Now we should be able to write the program and run oour code using Cassandra. For testing this out, we use the [tutorial]
 (https://academy.datastax.com/demos/getting-started-apache-cassandra-and-java-part-i). The tutorial also has a link to the [java
-code](https://gist.github.com/beccam/06c3283e5ee4a480a555) which you can use. Remember to first create the [User](http://www.planetcassandra.org/create-a-keyspace-and-table/) table, otherwise java program with throws exception.
+code](https://gist.github.com/beccam/06c3283e5ee4a480a555) which you can use. Remember to first create the [User](http://www.planetcassandra.org/create-a-keyspace-and-table/) table, otherwise java program with throws exception. The following cql command can be used to create the User table.:
 
-4. You can also use the cqlsh shell to create all the tables and test it on command line. An excellent tutorial is available
-[here](http://www.planetcassandra.org/create-a-keyspace-and-table/).
+  ```cql
 
-5. The true power of Cassandra can be observed when you set it up on a multi-node cluster.
+  CREATE TABLE user(lastname text PRIMARY KEY, 
+                 + age int, 
+                 + city text, 
+                 + email text, 
+                 + firstname text );
+  ```
+If the command fails because the table has already exists, then you can use the command below to remove the old User table:
+
+  ```cql
+  DROP TABLE IF EXISTS demo.user;
+  ```
+
+5. You can also use the cqlsh shell to create all the tables and test it on command line. Excellent tutorials are available
+[here](http://www.planetcassandra.org/create-a-keyspace-and-table/), and [here](https://www.tutorialspoint.com/cassandra/cassandra_create_table.htm).
+
+6. The true power of Cassandra can be observed when you set it up on a multi-node cluster.
 For details, you can check how to initialize a multiple node cluster with [single](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/initializeSingleDS.html) 
 or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/initializeMultipleDS.html) data centers.
 
-
-#Another way to install Cassandra
+# Another way to install Cassandra
 1. You first need to make sure the version of java on your machine is at least jdk7, jdk8 is the best. Otherwise you can not start cassandra.
 
 2. Download cassandra from the website http://cassandra.apache.org/download/, and decompress the file.
@@ -125,3 +152,30 @@ or [multiple](http://docs.datastax.com/en//cassandra/2.0/cassandra/initialize/in
    port number to 8000 or 9000.
 
 9. Access cassandra by typing in command:./cqlsh. Then you can use the instructions above to create your own tables.
+
+# Pitfalls you should pay attention to
+
+1. If you see error message like this:
+
+```bash
+sudo service cassandra start
+Cassandra 2.0 and later require Java 7 or later.
+```
+
+The reason is that java only was configured for the local user, but not for sudo:
+```bash
+sudo java -version
+sudo: java: command not found
+```
+
+The solution is to, first of all, tell the system that you have installed java and its path:
+```bash
+sudo update-alternatives --install "/usr/bin/java" "java" "/usr/jdk64/jdk1.8.0_112/bin/java" 1
+```
+
+Then set the new java as default:
+```bash
+sudo update-alternatives --set java /usr/jdk64/jdk1.8.0_112/bin/java
+```
+You can find reference [here](http://stackoverflow.com/questions/24190063/cassandra-2-complaining-about-java-7-when-i-have-java-7-installed).
+
