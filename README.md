@@ -151,7 +151,9 @@ Before installation, makesure the monitor and keyboard are connected to the corr
 
 8. When reboot after installation is complete, press F11 to get into the boot menu then choose "reboot from Hard Drive C"
 
-9. During OS installation, the Losalamos machine may give a DHCP error while autoconfiguring the network. In this case: ignore and continue installation. Once finished, login to the Ubuntu server, and add the following contents to the `/etc/network/interfaces` file.
+9. There is one machine (second from top) in the cluster that had some problem with booting. It was not able to boot from CD and skipped to boot from hard disk directly. We solved the problem by disabling the option to boot from hard disk and only allowing booting from CD. 
+
+10. During OS installation, the Losalamos machine may give a DHCP error while autoconfiguring the network. In this case: ignore and continue installation. Once finished, login to the Ubuntu server, and add the following contents to the `/etc/network/interfaces` file.
 ```
 auto eth1
 iface eth1 inet dhcp
@@ -558,7 +560,9 @@ All your are doing is going either up or down the network model layers.
 1. After installing the os and when we were rebooting the machines, we cannot successfully reboot it because the default boot option is to boot from network. We solve it by changing the booting option to `boot from hard drive C`from the boot menu.
 2. Shutting down losalamos is really really prone to damage its network settings and we could not fix it using port operation. Only reinstalling the system can fix it.
 3. The alpha machine also demonstrated abnormal activities in that its network response is somehow slow(ping google.com from alpha). Sometimes the network connection is just lost. We erased the IP settings and routing rules stored in memory to fix it.
-4. When copy files from local file system to hadoop file system, we got errors as permission denied. Simply using `sudo` didn't work cause it kept asking us for password. We solve it by modify the writing permission of the code.
+4. During subnet setup, we found that the machines in the cluster cannot ping each other, prompting "Host unreachable". At first we doubt it was because of some problems with the interface configure. After checking the interface configure and restarting it several times, the problem persists. So we tried to find the problem elsewhere. We connect two machines directly to see if they can reach each other. Finally we find out that the reason is we used the physical interface we used is not the one we configured. We changed the ports that the network cables connected to, and the problem was solved.
+5. When setting the password-less SSH, we did it under our own account. But when we reached the step Confirm Hosts, all the hosts' setups failed without any error shown. After we went through the wiki page one more time, we found that we should set the password-less SSH in the root account.
+6. When copy files from local file system to hadoop file system, we got errors as permission denied. Simply using `sudo` didn't work cause it kept asking us for password. We solve it by modify the writing permission of the code.
 We use the command:
 ```
 hdfs dfs -chmod 777 /user
